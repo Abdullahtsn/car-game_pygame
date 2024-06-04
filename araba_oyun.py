@@ -4,6 +4,8 @@ import sys
 import os
 
 
+
+
 pygame.init()
 
 class Pencere:
@@ -18,10 +20,13 @@ class Pencere:
         self.duraklat = True
         self.pencereAktif = False
         self.ozelCubukAcik = False
+        self.solTusBasili = False
+        self.sagTusBasili = False
         self.seviye = 1
         self.oyunHizi = 8
+        self.puan = 0
         self.menuButonlarıBosluk = 175
-        self.icKenarRenk = (50,50,50)
+        self.icKenarRenk = (60,60,60)
         self.disKenarRenk = (180,238,180)
         self.ekranDikeyBoyut = 1100
         self.ekranYatayBoyut = 800
@@ -87,11 +92,17 @@ dorduncuSiraSerit = SeritOlustur(700)
 besinciSiraSerit = SeritOlustur(900)
 altinciSiraSerit = SeritOlustur(1100)
      
+def seritAyarlamalari():
+    seritListesi = [ilkSiraSerit, ikinciSiraSerit, ucuncuSiraSerit, dorduncuSiraSerit, besinciSiraSerit, altinciSiraSerit]
+    for seritler in seritListesi:
+        seritler.seritCiz(pencereOzellik.oyunHizi)
+        if seritler.konumY > pencereOzellik.ekranDikeyBoyut :  #seritlerin ekranın dışına çıkınca yukardan tekrar inmesi için.
+            seritler.konumY = - seritler.seritUzunluk
 
-pygame.time.set_timer(pygame.USEREVENT + 1, random.randint(800, 2700))      #oyun döngüsünde zamanlayıcı ile işlem yapmak için oluşturulan satır. 
+'''pygame.time.set_timer(pygame.USEREVENT + 1, random.randint(800, 2700))      #oyun döngüsünde zamanlayıcı ile işlem yapmak için oluşturulan satır. 
 pygame.time.set_timer(pygame.USEREVENT + 2 , random.randint(800, 2700))     #userevent +1, +2 gibi şeylerle kimlik veriyoruz gibi bişey.
 solAgacListesi = []         #sürekli obje oluşturmasın diye döngüde oluşturulan objeleri buraya ve aşağıya atıyoruz.
-sagAgacListesi = [] 
+sagAgacListesi = [] '''
 
 
 class MenuButonOlustur:
@@ -155,9 +166,10 @@ class MenuButonOlustur:
             pencereOzellik.oyunAktif = True
             pencereOzellik.duraklat = False
             pencereOzellik.options = False
-            print('flgdşlfgkşl')
         elif self.metinYazi == 'RESTART':
             pencereOzellik.seviye = 1
+            pencereOzellik.puan = 0
+            pencereOzellik.oyunHizi = 8
             pencereOzellik.options = False
         elif self.metinYazi == 'OPTIONS':
             pencereOzellik.oyunAktif = False
@@ -269,6 +281,7 @@ class PencereCubuk:
                 pencereOzellik.menu = True
                 pencereOzellik.options = False
                 pencereOzellik.oyunAktif = False
+                pencereOzellik.communication = False  
             elif self.soundKonum.collidepoint(fare_X, fare_Y): #oyun sesi kısma eklenicek buraya unutma.
                 if pencereOzellik.sesAcik is True:
                     pencereOzellik.sesAcik = False
@@ -283,6 +296,7 @@ class PencereCubuk:
                     pencereOzellik.options = False
                     pencereOzellik.duraklat = True
                     pencereOzellik.oyunAktif = False
+                    pencereOzellik.communication = False  
                     pencereOzellik.oyunYuzeyi.blit(self.pauseFontCiz,((pencereOzellik.oyunYuzeyi.get_width()/2) - (self.pauseFontCerceveOlcu.w/2), (pencereOzellik.oyunYuzeyi.get_height()/2) -self.pauseFontCerceveOlcu.h/2))      #oyun durunca pauseyi çizdirdiğimiz kod. .
 
             elif self.arrowKonum.collidepoint(fare_X, fare_Y):
@@ -322,7 +336,7 @@ menuButonListesi = [play, restart, options, communication]      #menu için buto
 
 
 
-class DAraba:
+'''class DAraba:
     def __init__(self):
         self.arabaDusman1 = pygame.image.load(os.path.join('araba','d1.png')).convert_alpha()
         self.arabaDusman2 = pygame.image.load(os.path.join('araba','d2.png')).convert_alpha()
@@ -330,7 +344,7 @@ class DAraba:
         self.arabaDusman4 = pygame.image.load(os.path.join('araba','d4.png')).convert_alpha()
         self.arabaDusman5 = pygame.image.load(os.path.join('araba','d5.png')).convert_alpha()
         self.arabaDusman6 = pygame.image.load(os.path.join('araba','d6.png')).convert_alpha()
-        self.arabaDusman7 = pygame.image.load(os.path.join('araba','d7.png')).convert_alpha()
+        self.arabaDusman7 = pygame.image.load(os.path.join('araba','d7.png')).convert_alpha()'''
     
 
 
@@ -339,7 +353,7 @@ class Options:
         self.arabaOlcu = (136,200)
         self.okAOlcu = (72,72)
         self.okVSOlcu = (50,50)
-        self.secimIndex = 7    
+        self.secimIndex = 1    
         self.secilenAraba = None
         self.volume = 50
         self.kutularArkaPlan = (240, 246, 213)
@@ -351,32 +365,41 @@ class Options:
         self.SesSimge = pygame.transform.scale(pygame.image.load(os.path.join('icon','volume.png')).convert_alpha(),self.okVSOlcu)
         self.SagOkV = pygame.transform.scale(pygame.image.load(os.path.join('icon','nextarrow.png')).convert_alpha(),self.okVSOlcu)
         self.SolOkV = pygame.transform.scale(pygame.image.load(os.path.join('icon','backarrow.png')).convert_alpha(),self.okVSOlcu)
-        self.arabaSecim1 = pygame.transform.scale(pygame.image.load(os.path.join('araba','1.png')).convert_alpha(),self.arabaOlcu)
-        self.arabaSecim2 = pygame.transform.scale(pygame.image.load(os.path.join('araba','2.png')).convert_alpha(),self.arabaOlcu)
-        self.arabaSecim3 = pygame.transform.scale(pygame.image.load(os.path.join('araba','3.png')).convert_alpha(),self.arabaOlcu)
-        self.arabaSecim4 = pygame.transform.scale(pygame.image.load(os.path.join('araba','4.png')).convert_alpha(),self.arabaOlcu)
-        self.arabaSecim5 = pygame.transform.scale(pygame.image.load(os.path.join('araba','5.png')).convert_alpha(),self.arabaOlcu)
-        self.arabaSecim6 = pygame.transform.scale(pygame.image.load(os.path.join('araba','6.png')).convert_alpha(),self.arabaOlcu)
-        self.arabaSecim7 = pygame.transform.scale(pygame.image.load(os.path.join('araba','7.png')).convert_alpha(),self.arabaOlcu)
-        self.arabaKutuOlcu = ((self.yatayOrta) -120 , (self.dikeyOrta) -250 , 240 , 300)       
-        self.SagOkAOlcu = (self.yatayOrta +150 , (self.dikeyOrta- self.okAOlcu[1]/2) -100) 
-        self.SolOkAOlcu = (self.yatayOrta - (150 +(self.okAOlcu[0])), (self.dikeyOrta - self.okAOlcu[1]/2 ) -100)
-        self.sesSimgeolcu = ((self.yatayOrta) - self.okVSOlcu[0]/2 , (self.dikeyOrta) +115)
-        self.sesKutuOlcu = (self.yatayOrta -50, self.dikeyOrta +180, 100, 60)
-        self.solOkVOlcu = (self.yatayOrta -(80 +self.okVSOlcu[0]), (self.dikeyOrta - self.okVSOlcu[1]/2 )+210)
-        self.sagOkVOlcu = (self.yatayOrta + 80, (self.dikeyOrta - self.okVSOlcu[1]/2 )+210)
+        self.arabaResim1 = pygame.image.load(os.path.join('araba','1.png'))             #bu resimleri transformun içine yazmayıp burda değişken olarak tutmamın sebebi oyun için farklı ölçeklerde kullanmak için. scale kullanıldıktan sonra tekrar boyutlama yapılamıyor
+        self.arabaResim2 = pygame.image.load(os.path.join('araba','2.png'))
+        self.arabaResim3 = pygame.image.load(os.path.join('araba','3.png'))
+        self.arabaResim4 = pygame.image.load(os.path.join('araba','4.png'))
+        self.arabaResim5 = pygame.image.load(os.path.join('araba','5.png'))
+        self.arabaResim6 = pygame.image.load(os.path.join('araba','6.png'))
+        self.arabaResim7 = pygame.image.load(os.path.join('araba','7.png'))
+        self.optionsArabaListe = [(pygame.transform.scale(getattr(self,f'arabaResim{i}').convert_alpha(),self.arabaOlcu)) for i in range(1,8)]  #bu şekilde bi liste üreteci oluşturarak aşağıdaki şekilde hepsini tek tek yazma ve değişkene atama işleminden kurtulmuş olduk.
+                                                                                                                                                #aynı zamanda kod olarak daha az göründüğü için kafa karıştırıcılığıda azaldı. hemde daha düzenli ve performans açısından daha iyi oldu.
+        '''self.arabaSecim1 = pygame.transform.scale(self.arabaResim1.convert_alpha(),self.arabaOlcu)
+        self.arabaSecim2 = pygame.transform.scale(self.arabaResim2.convert_alpha(),self.arabaOlcu)
+        self.arabaSecim3 = pygame.transform.scale(self.arabaResim3.convert_alpha(),self.arabaOlcu)
+        self.arabaSecim4 = pygame.transform.scale(self.arabaResim4.convert_alpha(),self.arabaOlcu)
+        self.arabaSecim5 = pygame.transform.scale(self.arabaResim5.convert_alpha(),self.arabaOlcu)
+        self.arabaSecim6 = pygame.transform.scale(self.arabaResim6.convert_alpha(),self.arabaOlcu)
+        self.arabaSecim7 = pygame.transform.scale(self.arabaResim7.convert_alpha(),self.arabaOlcu)'''
+
+        self.arabaKutuOlcu = ((self.yatayOrta) -120 , (self.dikeyOrta) -230 , 240 , 300)       
+        self.SagOkAOlcu = (self.yatayOrta +150 , (self.dikeyOrta- self.okAOlcu[1]/2) -80) 
+        self.SolOkAOlcu = (self.yatayOrta - (150 +(self.okAOlcu[0])), (self.dikeyOrta - self.okAOlcu[1]/2 ) -80)
+        self.sesSimgeolcu = ((self.yatayOrta) - self.okVSOlcu[0]/2 , (self.dikeyOrta) +135)
+        self.sesKutuOlcu = (self.yatayOrta -50, self.dikeyOrta +200, 100, 60)
+        self.solOkVOlcu = (self.yatayOrta -(80 +self.okVSOlcu[0]), (self.dikeyOrta - self.okVSOlcu[1]/2 )+230)
+        self.sagOkVOlcu = (self.yatayOrta + 80, (self.dikeyOrta - self.okVSOlcu[1]/2 )+230)
         
         self.sagOkARect = pygame.Rect(self.SagOkAOlcu[0],self.SagOkAOlcu[1],self.okAOlcu[0],self.okAOlcu[1])        #tıklamalarla işlem görmesi için optionsdaki butonların rect nesnelerinin konumlarını oluşturdum güncel ölçülü halleriyle.
         self.solOkARect = pygame.Rect(self.SolOkAOlcu[0],self.SolOkAOlcu[1],self.okAOlcu[0],self.okAOlcu[1])
         self.sagOkVRect = pygame.Rect(self.sagOkVOlcu[0],self.sagOkVOlcu[1],self.okVSOlcu[0],self.okVSOlcu[1])
         self.solOkVRect = pygame.Rect(self.solOkVOlcu[0],self.solOkVOlcu[1],self.okVSOlcu[0],self.okVSOlcu[1])
-        print(self.sagOkARect,self.solOkARect,self.solOkVRect,self.sagOkVRect)
-    
-
-
+        
         
     def arabaGoster(self):
-        if self.secimIndex == 1:
+        pencereOzellik.oyunYuzeyi.blit((self.optionsArabaListe[self.secimIndex -1]), (pencereOzellik.oyunYuzeyi.get_width()/2 - self.optionsArabaListe[self.secimIndex -1].get_width()/2  ,pencereOzellik.oyunYuzeyi.get_height()/2 - self.optionsArabaListe[self.secimIndex -1].get_height()/2 -80))
+        #yukardaki şekilde yazarak aşağıdaki blokları ifade ettik hem karışıklığı hem gereksiz işlemleri azalttık. bu fonksiyondaki yorum satırlarıyla yukardaki tek satır aynı işlevi görüyor. initteki optionArabaListesindede bu yöntemi kullandım.
+        '''if self.secimIndex == 1:
             self.secilenAraba = pencereOzellik.oyunYuzeyi.blit(self.arabaSecim1,(pencereOzellik.oyunYuzeyi.get_width()/2 - self.arabaSecim1.get_width()/2  ,pencereOzellik.oyunYuzeyi.get_height()/2 - self.arabaSecim1.get_height()/2 -100))
         elif self.secimIndex == 2:
             self.secilenAraba = pencereOzellik.oyunYuzeyi.blit(self.arabaSecim2,(pencereOzellik.oyunYuzeyi.get_width()/2 - self.arabaSecim2.get_width()/2  ,pencereOzellik.oyunYuzeyi.get_height()/2 - self.arabaSecim2.get_height()/2 -100))
@@ -391,7 +414,7 @@ class Options:
         elif self.secimIndex == 7:
             self.secilenAraba = pencereOzellik.oyunYuzeyi.blit(self.arabaSecim7,(pencereOzellik.oyunYuzeyi.get_width()/2 - self.arabaSecim7.get_width()/2  ,pencereOzellik.oyunYuzeyi.get_height()/2 - self.arabaSecim7.get_height()/2 -100))
         else:
-            pass
+            pass'''
     
     
 
@@ -408,19 +431,9 @@ class Options:
         pencereOzellik.oyunYuzeyi.blit(self.SolOkV, self.solOkVOlcu)
         pencereOzellik.oyunYuzeyi.blit(self.SagOkV, self.sagOkVOlcu)
         self.arabaGoster()
+        
 
-        '''pencereOzellik.oyunYuzeyi.blit(pencereOzellik.optionsArkaPlan,(0,0))    #options genel arka plan
-        arabaKutu = pygame.draw.rect(pencereOzellik.oyunYuzeyi,self.ArabaArkaPlanAraba, [(pencereOzellik.oyunYuzeyi.get_width() /2) -120 , (pencereOzellik.oyunYuzeyi.get_height()/2) -150 , 240 , 300],border_radius= 30)     #secilen arabanın belli olması için araba arkasının planı.
-        pencereOzellik.oyunYuzeyi.blit(self.SagOkA,(arabaKutu.midright[0] +25, arabaKutu.midright[1]-(self.SagButtonA.h/2)))    #araba değişim sağ ok konumlama
-        pencereOzellik.oyunYuzeyi.blit(self.SolOkA,(arabaKutu.midleft[0] - (self.SolButtonA.w + 25), arabaKutu.midright[1]-(self.SolButtonA.h/2)))     #araba değişim sol ok konumlama, ok sol üst kenarından yerleştirilmeye başlandığı için sol kısma yerleştirirken genişliğinide alıyoruz.
-        sesKutu = pygame.draw.rect(pencereOzellik.oyunYuzeyi,self.ArabaArkaPlanAraba, [arabaKutu.x +80 , arabaKutu.y -100, arabaKutu.w -160 , 50],border_radius=15)
-        pencereOzellik.oyunYuzeyi.blit(self.SagOkV,(sesKutu.midright[0] +15, sesKutu.midright[1]-(self.SagButtonV.h/2)))      #sesin sag oku
-        pencereOzellik.oyunYuzeyi.blit(self.SolOkV,(sesKutu.midleft[0] - (self.SolButtonV.w +15), sesKutu.midleft[1]-(self.SolButtonV.h/2)))       #sesin sol oku
-        pencereOzellik.oyunYuzeyi.blit(self.Ses,(sesKutu.midleft[0] -150, sesKutu.midleft[1] -self.SagButtonV.h/2))   #ses simgesi
-        sesSeviyesi = self.Font.render(f'{self.volume}',True,(0,0,0))
-        sesSeviyesiOlculeri = sesSeviyesi.get_rect()
-        pencereOzellik.oyunYuzeyi.blit(sesSeviyesi,(sesKutu.centerx - sesSeviyesiOlculeri.w/2, sesKutu.centery - sesSeviyesiOlculeri.h/2))
-        self.arabaGoster()'''
+        
     
     def butonGorevler(self):
         fareX, fareY = pygame.mouse.get_pos()
@@ -442,38 +455,151 @@ class Options:
                 self.volume += 5
         else:
             pass
+        arabaObj.secilenArabaOlcuAyarla()   
 
 
 
 
 optionsObj = Options()
 
-      
 
-def oyunaGec():
+class Araba(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.genislik = 45
+        self.yukseklik = 67
+
+        self.x = pencereOzellik.oyunYuzeyi.get_width()/2 - self.genislik/2
+        self.y = pencereOzellik.oyunYuzeyi.get_height() - 175
+        self.arabaListe = [getattr(optionsObj,f'arabaResim{i}') for i in range(1,8)]        #self.arabaListe = [f'optionsObj.arabaResim{i}' for i in range(1,8)] bu şekilde yazınca düz olarak algılayıp hata veriyor listeyi yazdırınca düz yazı olarak kaydettiğini gördüm.
+                                                                                            #o yüzden ya listenin tüm elemanlarının adlarını tek tek yazıcam yada döngüyle çalışabilmesi için getattr kullanıcam. getattr sınıfın niteliklerine güncel olarak erişmek istediğinde kullanışlı.
+                                                                                            #anlamı ; getattr(x, 'y') x.y'ye eşdeğerdir...getattr() fonksiyonu, bir nesnenin belirli bir özelliğine (attribute) dinamik olarak erişmenizi sağlar. Bu özellik, nesnenin özelliğinin adıyla birlikte fonksiyona iletilir.
+        self.sAraba = None
+        self.secilenArabaOlcuAyarla()                                                       #obje oluşturulurken bir kere çalıştırılması ve none döndürmemesi için.
+        
+    def secilenArabaOlcuAyarla(self):
+        self.sAraba = pygame.transform.scale(self.arabaListe[optionsObj.secimIndex-1],(self.genislik, self.yukseklik))  #burda secimindexi initte eşitleyince sabit kalıyor değişmiyor. güncel olarak değişsin diye böyle atadım.
+       
+    def secileniCiz(self):
+        pencereOzellik.oyunYuzeyi.blit(self.sAraba,(self.x, self.y))
     
-    ##########      Genel Çizimler          ##############
-    pencereOzellik.oyunYuzeyi.fill((0,0,0))
-    pygame.draw.rect(pencereOzellik.oyunYuzeyi, pencereOzellik.disKenarRenk ,[25,0,750,1100])    
-    pygame.draw.rect(pencereOzellik.oyunYuzeyi, pencereOzellik.icKenarRenk ,[125,0,550,1100])
-
-    ##########      Agaç Konum Ve Hareketleri       ##############
-    ''' global solAgacListesi,sagAgacListesi    #bunu yapmayınca liste adı globalmi değilmi anlamayıp hata veriyor o yüzden heryerden erişilebilir olması için global yaptık.
-    solAgacListesi = [agaclar for agaclar in solAgacListesi if agaclar.solAgacY <= pencereOzellik.ekranDikeyBoyut]     #liste üreteci deniyor buna. solağaçlistesindeki elemanların y konumlarını ekranın alt bitiş noktasıyla karşılaştırıp koşula uyan yani sadece ekranın içinde olan ağaçları listeye alıyor. ekranın dışına çıkan ağaçları sonsuzluğa varmaması için siliyor.
-    for agaclar in solAgacListesi:      
-        agaclar.solKenarAgac()
-    sagAgacListesi = [agaclar for agaclar in sagAgacListesi if agaclar.sagAgacY <= pencereOzellik.ekranDikeyBoyut]     
-    for agaclar in sagAgacListesi:
-        agaclar.sagKenarAgac()
-        '''
-    ##########      Şerit konumları ve hareketleri       ##############
-    seritListesi = [ilkSiraSerit, ikinciSiraSerit, ucuncuSiraSerit, dorduncuSiraSerit, besinciSiraSerit, altinciSiraSerit]
-    for seritler in seritListesi:
-        seritler.seritCiz(pencereOzellik.oyunHizi)
-        if seritler.konumY > pencereOzellik.ekranDikeyBoyut :  #seritlerin ekranın dışına çıkınca yukardan tekrar inmesi için.
-            seritler.konumY = - seritler.seritUzunluk
+    def tusKontrolleri(self):
+        if pencereOzellik.solTusBasili is True:
+            if self.x > oyunIciSeviyeAyarlari.IcKenarOlcu[0]:
+                self.x -= pencereOzellik.oyunHizi
+            else:
+                pass
+        if pencereOzellik.sagTusBasili is True:
+            if self.x + self.genislik < oyunIciSeviyeAyarlari.IcKenarOlcu[0] + oyunIciSeviyeAyarlari.IcKenarOlcu[2]:
+                self.x += pencereOzellik.oyunHizi
+            else:
+                pass 
+    
 
 
+
+arabaObj = Araba()
+
+class SeviyeAyarlar:
+    def __init__(self):
+        self.zamanDegeri = 2000
+        self.puanZamanlayicisi = pygame.USEREVENT +1
+        pygame.time.set_timer(self.puanZamanlayicisi, self.zamanDegeri)
+        self.bilgiKutuOlcu = [0 ,pencereOzellik.oyunYuzeyi.get_height() -80 , pencereOzellik.oyunYuzeyi.get_width(), 80]
+        self.bilgiFont = pygame.font.Font(os.path.join('font','2.ttf'), 30)
+        self.fontRenk = (240, 246, 213)
+        self.fontOlcu = self.bilgiFont.render(f'Olcu : {pencereOzellik.seviye}', True, self.fontRenk)       #bunu burda yapmamızın sebebi yazının yüksekliğiyle ilgili hesaplamayı initte yapıp fonksiyon her çalıştığında tekrar tekrar hesaplama yapmaması için. metni initte hazırlayabiliyoruz,
+                                                                                                            #ama puan ve seviye değişkenlerinin sürekli güncellenmesi gerekiyor. initte bunlar güncellenmiyor sınıf oluşturulurken ki değerleri alıyor sabit kalıyor. oyüzden yazı oluşturma kısmını fonksiyona, 
+                                                                                                            #bunların ölçüleri sabit olcağı için ölçüsünüde bi yer tutucuya katardım ki metnin yükseklik olarak ölçüsünü alabileyim
+        self.levelBilgiKonum = (150, self.bilgiKutuOlcu[1] + (self.bilgiKutuOlcu[3]/2 - self.fontOlcu.get_height()/2))      #dikey olarak kutuya ortalayabilmek için için font ölçüdeki rasgele oluşturduğum meyni kullanıyorum . dikay olarak boyutları sabit olcak.
+        self.scoreBilgiKonum = (pencereOzellik.oyunYuzeyi.get_width()/2 +25, self.bilgiKutuOlcu[1] + (self.bilgiKutuOlcu[3]/2 - self.fontOlcu.get_height()/2))
+        self.disKenarOlcu =[0,0,pencereOzellik.oyunYuzeyi.get_width() ,pencereOzellik.oyunYuzeyi.get_height()]
+        self.IcKenarOlcu = [125,0,550,1100]
+
+    def seviyeSecim(self):
+        
+        if 0 <= pencereOzellik.puan < 80:
+            pencereOzellik.seviye = 1
+        elif 80 <= pencereOzellik.puan < 170:
+            pencereOzellik.seviye = 2
+            pencereOzellik.oyunHizi = 9
+        elif 170 <= pencereOzellik.puan < 270:
+            pencereOzellik.seviye = 3
+            pencereOzellik.oyunHizi = 10
+        elif 270 <= pencereOzellik.puan < 380:
+            pencereOzellik.seviye = 4
+            pencereOzellik.oyunHizi = 11
+        elif 380 <= pencereOzellik.puan < 620:
+            pencereOzellik.seviye = 5
+            pencereOzellik.oyunHizi = 12
+        elif 620 <= pencereOzellik.puan < 945:
+            pencereOzellik.seviye = 6
+            pencereOzellik.oyunHizi = 13
+        elif 945 <= pencereOzellik.puan < 1395:
+            pencereOzellik.seviye = 7
+            pencereOzellik.oyunHizi = 15
+        elif 1395 <= pencereOzellik.puan :
+            pencereOzellik.seviye = 18
+
+
+        if pencereOzellik.seviye == 1:
+            self.seviye1()
+        elif pencereOzellik.seviye == 2:
+            self.seviye2()
+        elif pencereOzellik.seviye == 3:
+            self.seviye3()
+        elif pencereOzellik.seviye == 4:
+            self.seviye4()
+        elif pencereOzellik.seviye == 5:
+            self.seviye5()
+        elif pencereOzellik.seviye == 6:
+            self.seviye6()
+        elif pencereOzellik.seviye == 7:
+            self.seviye7()
+        elif pencereOzellik.seviye == 8:
+            self.seviye8()
+        else:
+            pass
+        
+    def oyunBilgisi(self):          #oyundayken oyuncuya bilgi amaçlı yazılan seviye ve puan textlerinin çizilmesi
+        bilgiKutu = pygame.draw.rect(pencereOzellik.oyunYuzeyi, (0,0,0), self.bilgiKutuOlcu)
+        levelBilgi = self.bilgiFont.render(f'LEVEL : {pencereOzellik.seviye}', True, self.fontRenk)
+        scoreBilgi = self.bilgiFont.render(f'SCORE : {pencereOzellik.puan}', True, self.fontRenk)
+        pencereOzellik.oyunYuzeyi.blit(levelBilgi, self.levelBilgiKonum)
+        pencereOzellik.oyunYuzeyi.blit(scoreBilgi, self.scoreBilgiKonum)
+        
+
+    def seviye1(self):
+        pygame.draw.rect(pencereOzellik.oyunYuzeyi, pencereOzellik.disKenarRenk , self.disKenarOlcu)    
+        pygame.draw.rect(pencereOzellik.oyunYuzeyi, (pencereOzellik.icKenarRenk) , self.IcKenarOlcu)
+        seritAyarlamalari()
+        arabaObj.secileniCiz()
+
+    def seviye2(self):
+        pass
+
+    def seviye3(self):
+        pass
+
+    def seviye4(self):
+        pass
+
+    def seviye5(self):
+        pass
+
+    def seviye6(self):
+        pass
+
+    def seviye7(self):
+        pass
+
+    def seviye8(self):
+        pass
+
+     
+
+
+oyunIciSeviyeAyarlari = SeviyeAyarlar()
 
 def menuyeGec():
     pencereOzellik.oyunYuzeyi.blit(pencereOzellik.menuArkaPlan,(0,0))   #her defasında resmi tekrar tekrar yüklemesin diye pencere ilk oluştururken yüklenen resmi kullanıyoruz.
@@ -507,10 +633,6 @@ def oyunCalistir():
                 pygame.quit()
                 sys.exit()
             
-
-            if event.type == pygame.MOUSEBUTTONUP:        #down ile upu ayırmayınca kafası karışıyor olayları karıştırıyor. görev çubuğu işlemlerini tuşu bırakıncaya atadım.
-                GorevCubugu.gorevCubuguTiklamaOlaylari()
-                
                             
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pencereOzellik.menu is True:
@@ -520,9 +642,32 @@ def oyunCalistir():
                             buton.butonGorev()
                 elif pencereOzellik.options is True:
                     optionsObj.butonGorevler()
+                GorevCubugu.gorevCubuguTiklamaOlaylari()        #görev çubuğunu sürekli algılanması için en alta yazıp fonksiyona gönderiyoruz.
+
+            
+            if event.type == pygame.KEYDOWN:
+                if pencereOzellik.oyunAktif:
+                    if event.key == pygame.K_LEFT:
+                        pencereOzellik.solTusBasili = True
+                    elif event.key == pygame.K_RIGHT:
+                        pencereOzellik.sagTusBasili = True
+            if event.type == pygame.KEYUP:
+                if pencereOzellik.oyunAktif:
+                    if event.key == pygame.K_LEFT:
+                        pencereOzellik.solTusBasili = False
+                    elif event.key == pygame.K_RIGHT:
+                        pencereOzellik.sagTusBasili = False
+                
+            
 
                 
+
+            if event.type == oyunIciSeviyeAyarlari.puanZamanlayicisi:       #sadece oyunaktifken her 2 saniye için oyun hızının puana eklenmesi.
+                if pencereOzellik.oyunAktif is True:
+                    pencereOzellik.puan += pencereOzellik.oyunHizi
+                    print(pencereOzellik.puan)
                 
+        arabaObj.tusKontrolleri()    
 
         if pencereOzellik.menu is True:     #menü çizimi ve efektler.
             pencereOzellik.oyunAktif = False
@@ -535,25 +680,23 @@ def oyunCalistir():
                     buton.butonEfektAktif = False
                 buton.menuButonEfekt(pencereOzellik.oyunYuzeyi)
         
-        elif  pencereOzellik.menu is False and pencereOzellik.oyunAktif is True and pencereOzellik.duraklat is False:         #oyun şemaları çizimi
-            oyunaGec()      #yapılıcak tekrarlı çizimkileri bu fonksiyon içine yaz.
-
-        elif pencereOzellik.menu is False and pencereOzellik.oyunAktif is False and pencereOzellik.communication is True:
+        elif  pencereOzellik.oyunAktif is True and pencereOzellik.menu is False and  pencereOzellik.duraklat is False:         #oyun şemaları çizimi
+            oyunIciSeviyeAyarlari.seviyeSecim()      #yapılıcak tekrarlı çizimkileri bu fonksiyon içine yaz.
+            oyunIciSeviyeAyarlari.oyunBilgisi()
+            
+        elif pencereOzellik.communication is True and pencereOzellik.menu is False and pencereOzellik.oyunAktif is False :
             communicationGec()
-            pencereOzellik.communication = False    #böyle yapmamızın sebebi sadece bir defa çizip durması, sabit bişeyi defalarca çizmemesi için
         
-        elif pencereOzellik.menu is False and pencereOzellik.oyunAktif is False and pencereOzellik.options is True :
+        elif pencereOzellik.options is True and pencereOzellik.menu is False and pencereOzellik.oyunAktif is False :
             optionsObj.optionsCizimler()
             
-            
-
         GorevCubugu.ciz()       #bunun en altta olmasının sebebi en son çizilip en üstte görünmesi görev çubuğunun
         
         pygame.display.flip()       #güncelleme için.
         pencereOzellik.fps.tick(50)
         
 
-if __name__ == '__main__':      #bu bloğun anlamı: sadece bu py dosyası doğrudan çalıştırılıyorsa oyun menü sınıfı oluşturulup işlemler gerçekleştiricek demek,
+if __name__ == '__main__':      #bu bloğun anlamı: sadece bu py dosyası doğrudan çalıştırılıyorsa  işlemler gerçekleştiricek demek,
     oyunCalistir()                  #eğer bu py dosyası import edilirse o zaman bu blok çalıştırılmıycak demektir.
     
         
