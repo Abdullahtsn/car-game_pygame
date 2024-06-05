@@ -66,25 +66,50 @@ class SeritOlustur:
 
 class AgacOlustur:
     def __init__(self):
-        self.agacGenislik = 94
-        self.agacYukseklik = 94
-        self.solAgacX = 25
-        self.solAgacY = -94     #ekranın üst kısımdan başlayarak inmesi için
-        self.sagAgacX = 675
-        self.sagAgacY = -94
-        self.secilenAgacGorseli = random.randint(1,7)      #agac klasöründeki agac isimlerinin rasgele çekilerek belirlenmesi için.
-        agacDosyaAdi = os.path.join('agac',f'{self.secilenAgacGorseli}.png')    #diğer işletim sistemlerindede dosyayı bulabilmesi için
-        self.agac = pygame.image.load(agacDosyaAdi).convert_alpha()     #convert_alpha() resmin arka planını saydam yapıyor. resmin arka planının görünmesini istersen convert() yöntemini kullan.
-        self.agacAyarla = pygame.transform.scale(self.agac,(self.agacGenislik, self.agacYukseklik))     #seçilen ağacı boyutlandırma
+        self.agacGenislik = 70
+        self.agacYukseklik = 70
+        self.solAgacX = ((0 + oyunIciSeviyeAyarlari.IcKenarOlcu[0]) /2) - (self.agacGenislik/2)
+        self.sagAgacX = (oyunIciSeviyeAyarlari.IcKenarOlcu[0] + oyunIciSeviyeAyarlari.IcKenarOlcu[2]) + (( pencereOzellik.oyunYuzeyi.get_width() - oyunIciSeviyeAyarlari.IcKenarOlcu[0] - oyunIciSeviyeAyarlari.IcKenarOlcu[2]) /2 - self.agacGenislik/2)
+        self.agacY = -94     #ekranın üst kısımdan başlayarak inmesi için. y koordinatı ikisindede aynı ileyişte  olcağı için tek değişken
         
-    def solKenarAgac (self):
-        pencereOzellik.oyunYuzeyi.blit(self.agacAyarla,(self.solAgacX, self.solAgacY))
-        self.solAgacY += pencereOzellik.oyunHizi
+        self.agacListesi = [pygame.transform.scale(pygame.image.load(os.path.join('agac',f'{i}.png')).convert_alpha(),(self.agacGenislik,self.agacYukseklik)) for i in range(1,22)]
+        self.seviyeResim = None
+        self.seviyeyeAyarla()   
+        
 
-    def sagKenarAgac (self):
-        pencereOzellik.oyunYuzeyi.blit(self.agacAyarla,(self.sagAgacX, self.sagAgacY))
-        self.sagAgacY += pencereOzellik.oyunHizi
+
+    def seviyeyeAyarla(self):                                   #amacı ; bulunulan seviyeye göre ayrılan 3 görselden rasgele bir tanesini seçip kullanması için
+        if pencereOzellik.seviye == 1:
+            self.seviyeResim = self.agacListesi[0:3]
+        elif pencereOzellik.seviye == 2:
+            self.seviyeResim = self.agacListesi[3:6]
+        elif pencereOzellik.seviye == 3:
+            self.seviyeResim = self.agacListesi[6:9]
+        elif pencereOzellik.seviye == 4:
+            self.seviyeResim = self.agacListesi[9:12]
+        elif pencereOzellik.seviye == 5:
+            self.seviyeResim = self.agacListesi[12:15]
+        elif pencereOzellik.seviye == 6:
+            self.seviyeResim = self.agacListesi[15:18]
+        elif pencereOzellik.seviye == 7:
+            self.seviyeResim = self.agacListesi[15:18]
+        elif pencereOzellik.seviye == 8:
+            self.seviyeResim = self.agacListesi[18:]
+
+        self.secilen = self.seviyeResim[random.randint(0,2)]
     
+    def agacCiz(self,bolge):
+        if bolge == 'sol':
+            pencereOzellik.oyunYuzeyi.blit(self.secilen,(self.solAgacX, self.agacY))
+        elif bolge == 'sag':
+            pencereOzellik.oyunYuzeyi.blit(self.secilen,(self.sagAgacX, self.agacY))
+        self.agacY += pencereOzellik.oyunHizi
+    
+    
+    
+
+
+
 ilkSiraSerit = SeritOlustur(100)
 ikinciSiraSerit = SeritOlustur(300)
 ucuncuSiraSerit = SeritOlustur(500)
@@ -99,10 +124,7 @@ def seritAyarlamalari():
         if seritler.konumY > pencereOzellik.ekranDikeyBoyut :  #seritlerin ekranın dışına çıkınca yukardan tekrar inmesi için.
             seritler.konumY = - seritler.seritUzunluk
 
-'''pygame.time.set_timer(pygame.USEREVENT + 1, random.randint(800, 2700))      #oyun döngüsünde zamanlayıcı ile işlem yapmak için oluşturulan satır. 
-pygame.time.set_timer(pygame.USEREVENT + 2 , random.randint(800, 2700))     #userevent +1, +2 gibi şeylerle kimlik veriyoruz gibi bişey.
-solAgacListesi = []         #sürekli obje oluşturmasın diye döngüde oluşturulan objeleri buraya ve aşağıya atıyoruz.
-sagAgacListesi = [] '''
+
 
 
 class MenuButonOlustur:
@@ -336,18 +358,6 @@ menuButonListesi = [play, restart, options, communication]      #menu için buto
 
 
 
-'''class DAraba:
-    def __init__(self):
-        self.arabaDusman1 = pygame.image.load(os.path.join('araba','d1.png')).convert_alpha()
-        self.arabaDusman2 = pygame.image.load(os.path.join('araba','d2.png')).convert_alpha()
-        self.arabaDusman3 = pygame.image.load(os.path.join('araba','d3.png')).convert_alpha()
-        self.arabaDusman4 = pygame.image.load(os.path.join('araba','d4.png')).convert_alpha()
-        self.arabaDusman5 = pygame.image.load(os.path.join('araba','d5.png')).convert_alpha()
-        self.arabaDusman6 = pygame.image.load(os.path.join('araba','d6.png')).convert_alpha()
-        self.arabaDusman7 = pygame.image.load(os.path.join('araba','d7.png')).convert_alpha()'''
-    
-
-
 class Options:
     def __init__(self):
         self.arabaOlcu = (136,200)
@@ -455,7 +465,7 @@ class Options:
                 self.volume += 5
         else:
             pass
-        arabaObj.secilenArabaOlcuAyarla()   
+        arabaObj.secilenArabaOlcuAyarla()           #optionsda herhangi bişeye tıklandıktan sonra oyun ordaki görselin oyun  içinde boyutlanması için
 
 
 
@@ -500,11 +510,22 @@ class Araba(pygame.sprite.Sprite):
 
 arabaObj = Araba()
 
+
+################    agacların çıkma zamanı    ###################
+                              #burda yazmamın sebebi sınıf içerisinde yazarsam rasgele çekmiyor sayıyı sürekli aynı şeyi kullanıyor.
+
+
+
 class SeviyeAyarlar:
     def __init__(self):
         self.zamanDegeri = 2000
         self.puanZamanlayicisi = pygame.USEREVENT +1
         pygame.time.set_timer(self.puanZamanlayicisi, self.zamanDegeri)
+        self.agacZamanlayicisiSag = pygame.USEREVENT +2    #pygame.settimer  için zamanı aşağıdaki fonksiyonda tanımlayıp her süre dolumunda o fonksiyona gönderdim ki süreki farklı zamanları seçsin
+        self.agacZamanlayicisiSol = pygame.USEREVENT +3
+        self.agacIcinZamanSec('sag')       
+        self.agacIcinZamanSec('sol')     
+
         self.bilgiKutuOlcu = [0 ,pencereOzellik.oyunYuzeyi.get_height() -80 , pencereOzellik.oyunYuzeyi.get_width(), 80]
         self.bilgiFont = pygame.font.Font(os.path.join('font','2.ttf'), 30)
         self.fontRenk = (240, 246, 213)
@@ -515,6 +536,8 @@ class SeviyeAyarlar:
         self.scoreBilgiKonum = (pencereOzellik.oyunYuzeyi.get_width()/2 +25, self.bilgiKutuOlcu[1] + (self.bilgiKutuOlcu[3]/2 - self.fontOlcu.get_height()/2))
         self.disKenarOlcu =[0,0,pencereOzellik.oyunYuzeyi.get_width() ,pencereOzellik.oyunYuzeyi.get_height()]
         self.IcKenarOlcu = [125,0,550,1100]
+        self.sagAgacListesi = []
+        self.solAgacListesi = []
 
     def seviyeSecim(self):
         
@@ -539,7 +562,8 @@ class SeviyeAyarlar:
             pencereOzellik.seviye = 7
             pencereOzellik.oyunHizi = 15
         elif 1395 <= pencereOzellik.puan :
-            pencereOzellik.seviye = 18
+            pencereOzellik.seviye = 8
+            pencereOzellik.oyunHizi = 18
 
 
         if pencereOzellik.seviye == 1:
@@ -567,12 +591,36 @@ class SeviyeAyarlar:
         scoreBilgi = self.bilgiFont.render(f'SCORE : {pencereOzellik.puan}', True, self.fontRenk)
         pencereOzellik.oyunYuzeyi.blit(levelBilgi, self.levelBilgiKonum)
         pencereOzellik.oyunYuzeyi.blit(scoreBilgi, self.scoreBilgiKonum)
+
+    def agacIcinZamanSec(self,bolge):
+        if bolge == 'sag':
+            pygame.time.set_timer(self.agacZamanlayicisiSag, (random.randint(700, 3000)))
+        elif bolge == 'sol':
+            pygame.time.set_timer(self.agacZamanlayicisiSol, (random.randint(700, 3000)))
         
+    
+    def agacOlustur(self,bolge):
+        if bolge == 'sag':
+            self.sagAgacListesi.append(AgacOlustur())
+        
+        elif bolge == 'sol':
+            self.solAgacListesi.append(AgacOlustur())
+        print(len(self.sagAgacListesi),len(self.solAgacListesi))
+    
+    def agacAyarla(self):
+        for i in self.sagAgacListesi:
+            i.agacCiz('sag')
+        for i in self.solAgacListesi:
+            i.agacCiz('sol')
+        self.sagAgacListesi = [x for x in self.sagAgacListesi if x.agacY < pencereOzellik.oyunYuzeyi.get_height() ]     #ekran dışına  çıkan ağaçları listeye almıyoruz. sonsuza kadar giden ağaçların objelerini boşa çıkarıp pythonun çöp toplayıcının silmesini sağlıyoruz.
+        self.solAgacListesi = [x for x in self.solAgacListesi if x.agacY < pencereOzellik.oyunYuzeyi.get_height() ]
+
 
     def seviye1(self):
         pygame.draw.rect(pencereOzellik.oyunYuzeyi, pencereOzellik.disKenarRenk , self.disKenarOlcu)    
         pygame.draw.rect(pencereOzellik.oyunYuzeyi, (pencereOzellik.icKenarRenk) , self.IcKenarOlcu)
         seritAyarlamalari()
+        self.agacAyarla()
         arabaObj.secileniCiz()
 
     def seviye2(self):
@@ -619,11 +667,6 @@ def communicationGec():
     
 
 
-    
-    
-        
-    
-
 
 def oyunCalistir():
     while pencereOzellik.oyunCalisiyor: 
@@ -665,7 +708,17 @@ def oyunCalistir():
             if event.type == oyunIciSeviyeAyarlari.puanZamanlayicisi:       #sadece oyunaktifken her 2 saniye için oyun hızının puana eklenmesi.
                 if pencereOzellik.oyunAktif is True:
                     pencereOzellik.puan += pencereOzellik.oyunHizi
-                    print(pencereOzellik.puan)
+            
+            if event.type == oyunIciSeviyeAyarlari.agacZamanlayicisiSag:       #sadece oyun aktifken ağaç çizimi için rasgele zamanların belirlenlemesi ve ağaç çizimi
+                if pencereOzellik.oyunAktif is True:
+                    oyunIciSeviyeAyarlari.agacIcinZamanSec('sag')
+                    oyunIciSeviyeAyarlari.agacOlustur('sag')
+                    
+            if event.type == oyunIciSeviyeAyarlari.agacZamanlayicisiSol:       #sadece oyun aktifken ağaç çizimi için rasgele zamanların belirlenlemesi ve ağaç çizimi
+                if pencereOzellik.oyunAktif is True:
+                    oyunIciSeviyeAyarlari.agacIcinZamanSec('sol') 
+                    oyunIciSeviyeAyarlari.agacOlustur('sol')       
+                    
                 
         arabaObj.tusKontrolleri()    
 
