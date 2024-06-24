@@ -111,7 +111,7 @@ class AgacOlustur:
         self.agacYukseklik = 70
         self.solAgacX = ((0 + oyunIciSeviyeAyarlari.IcKenarOlcu[0]) /2) - (self.agacGenislik/2)
         self.sagAgacX = (oyunIciSeviyeAyarlari.IcKenarOlcu[0] + oyunIciSeviyeAyarlari.IcKenarOlcu[2]) + (( pencereOzellik.oyunYuzeyi.get_width() - oyunIciSeviyeAyarlari.IcKenarOlcu[0] - oyunIciSeviyeAyarlari.IcKenarOlcu[2]) /2 - self.agacGenislik/2)
-        self.agacY = -94     #ekranın üst kısımdan başlayarak inmesi için. y koordinatı ikisindede aynı ileyişte  olcağı için tek değişken
+        self.agacY = -94     #ekranın üst kısımdan başlayarak inmesi için. y koordinatı ikisindede aynı ilerleyişte  olcağı için tek değişken
         self.seviyeResim = None
         self.seviyeyeAyarla()   
         
@@ -170,7 +170,7 @@ class MenuButonOlustur:
         self.cerceveAktifRenk = (0,0,0)
         self.kenarlikRenk = (0,0,0)
         self.metinYazi = metin
-        self.metinPasif = fontOzellik.render( self.metinYazi, netlik , self.yaziPasifRenk)          #burdaki antialias metnü pürüzsüzleştirmeyle alakalı, true yaparsan metnin kenarları daha yumuşak oluyor.
+        self.metinPasif = fontOzellik.render( self.metinYazi, netlik , self.yaziPasifRenk)          #burdaki antialias metni pürüzsüzleştirmeyle alakalı, true yaparsan metnin kenarları daha yumuşak oluyor.
         self.metinAktif = fontOzellik.render( self.metinYazi, netlik , self.yaziAktifRenk) 
         self.metinOlcu = self.metinPasif.get_rect()      #oluşturulan yazının  kenar kısımlarının genişlik uzunluk ölçülerini veriyor.
         self.konumY = konumY
@@ -519,12 +519,18 @@ class Araba(pygame.sprite.Sprite):
         self.sAraba = pygame.transform.scale(self.arabaListe[optionsObj.secimIndex-1],(self.genislik, self.yukseklik))
         self.secilenArabaOlcuAyarla()                                                       #obje oluşturulurken bir kere çalıştırılması ve none döndürmemesi için.
         self.rect = self.sAraba.get_rect()                                                  #aşağıdaki fonksiyona gönderilip resmin bir kere tanımlanmasından sonra rectini alıyoruz.
-        
+        self.mask = pygame.mask.from_surface(self.sAraba)                                   #resimlerin çarpışmasını kare olarak hesaplayıp ona göre yapmak pek doğru gelmiyor. ilk önce rectlerini(karelerini) hesaplıycaz çarpışıyormu diye,
+       
+        '''self.ArabaSpriteGrubu = pygame.sprite.Group()
+        self.ArabaSpriteGrubu.add(self)                                                     #maskesini çizebilmek için sprite grubundan oluşturulan listeye sadece arabayı dahil ediyoruz. engelle için ayrı bi liste yaptık zaten.
+        '''
     def secilenArabaOlcuAyarla(self):
         self.sAraba = pygame.transform.scale(self.arabaListe[optionsObj.secimIndex-1],(self.genislik, self.yukseklik))  #burda secim indexi initte eşitleyince sabit kalıyor değişmiyor. güncel olarak değişsin diye böyle atadım.
         
     def secileniCiz(self):
         pencereOzellik.oyunYuzeyi.blit(self.sAraba,(self.x, self.y))
+        self.rect.x = self.x
+        self.rect.y = self.y
     
     def tusKontrolleri(self):
         if pencereOzellik.solTusBasili is True:
@@ -548,6 +554,7 @@ class Araba(pygame.sprite.Sprite):
 
         self.rect.x = self.x              #eğer rectlerini güncellemezsek ilk iki eleman sürekli 0,0 olarak görülüyor ve sol üst köşedeymiş gibi gösteriyor.
         self.rect.y = self.y              #o yüzden her hareket sonrası rectlerini güncelliyoruz.
+        
 
 arabaObj = Araba()
 
@@ -582,10 +589,7 @@ class Engeller(pygame.sprite.Sprite):
             self.secilenResim = random.choice(Engeller.sagUcakResimListesi)
 
         self.rect = self.secilenResim.get_rect()
-        '''self.x = self.rect.x
-        self.y = self.rect.y
-        self.w = self.rect.w
-        self.h = self.rect.h'''
+        self.mask = pygame.mask.from_surface(self.secilenResim)
 
 
     def engelCiz(self):    
@@ -610,7 +614,7 @@ class Engeller(pygame.sprite.Sprite):
 
         self.rect.x = self.x
         self.rect.y = self.y
-       
+        
 
         pencereOzellik.oyunYuzeyi.blit(self.secilenResim,(self.x, self.y))
     
@@ -874,7 +878,7 @@ def oyunCalistir():
                     elif event.key == pygame.K_DOWN:
                         pencereOzellik.altTusBasili = False
         
-            ############   oluşturulan özel eventler   #################
+            ############   OLUŞTURULAN ÖZEL EVENTLER   #################
             if event.type == oyunIciSeviyeAyarlari.puanZamanlayicisi:       #sadece oyunaktifken her 2 saniye için oyun hızının puana eklenmesi.
                 if pencereOzellik.oyunAktif is True:
                     pencereOzellik.puan += pencereOzellik.oyunHizi
@@ -889,7 +893,7 @@ def oyunCalistir():
                     oyunIciSeviyeAyarlari.agacIcinZamanSec('sol') 
                     oyunIciSeviyeAyarlari.agacOlustur('sol')   
 
-            if event.type == oyunIciSeviyeAyarlari.engelZamanlayicisi:
+            if event.type == oyunIciSeviyeAyarlari.engelZamanlayicisi:         #engel oluşturma zamanlaması
                 if pencereOzellik.oyunAktif is True:
                     oyunIciSeviyeAyarlari.engellerIcinZamanSec()
                     oyunIciSeviyeAyarlari.engelOlustur()    
@@ -910,12 +914,18 @@ def oyunCalistir():
             oyunIciSeviyeAyarlari.oyunBilgisi()
             oyunIciSeviyeAyarlari.engelSpriteGrubuGuncelle()
             arabaObj.tusKontrolleri()  
-            carpismaKontrolleri = pygame.sprite.spritecollide(arabaObj, oyunIciSeviyeAyarlari.engelSpriteGrubu, True)   
-            if carpismaKontrolleri:
-                pencereOzellik.oyunSonu = True
-                sonpuan = str(pencereOzellik.puan)      #aşağıdaki fonksiyonda puanı sıfırlıyor o yüzden puanı burda bideğişkende tutup oyun sonu fonksiyonuna bu değişkeni gönderiyoruz.
-                #pencereOzellik.oyunSonuMuzigi = True    #bayrak kullanmayıp direk sesi açınca döngü olduğu için sürekli sürekli sesi oynatıyor. burdaki bayrak tek bir defa çalması için.
-                pencereOzellik.herseyiSifirla()
+            
+            ####### ÇARPIŞMA KONTROLLERİ ########
+            carpismaKontrolleriAlani = pygame.sprite.spritecollide(arabaObj, oyunIciSeviyeAyarlari.engelSpriteGrubu, True)   #ilk önce rectlerin çarpışmasını kontrol ediyoruz bu hem daha az kaynak hem daha az hesaplama gerektiriyor.
+            if carpismaKontrolleriAlani:
+                for engel in carpismaKontrolleriAlani:          #eğer rect çarğışması varsa maske çarpışmasını kontrol ediyoruz. bu resimlerin karelerinin  yerine direk piksellerini kontrol ediyor. daha detaylı bi kontrol sağlıyor o yüzden rectler gerçekleştikten sonra bunu kontrol ediyoruz ki sürekli pikselleri kontrol ederek gereksiz hesap yükünden kurtuluyoruz.
+                    offsett = ( engel.rect.x - arabaObj.rect.x , engel.rect.y - arabaObj.rect.y)
+                    carpismaNoktasi = arabaObj.mask.overlap(engel.mask, offsett)
+                    if carpismaNoktasi:
+                        pencereOzellik.oyunSonu = True
+                        sonpuan = str(pencereOzellik.puan)      #aşağıdaki fonksiyonda puanı sıfırlıyor o yüzden puanı burda bideğişkende tutup oyun sonu fonksiyonuna bu değişkeni gönderiyoruz.
+                        #pencereOzellik.oyunSonuMuzigi = True    #bayrak kullanmayıp direk sesi açınca döngü olduğu için sürekli sürekli sesi oynatıyor. burdaki bayrak tek bir defa çalması için.
+                        pencereOzellik.herseyiSifirla()
             
             
         elif pencereOzellik.communication is True and pencereOzellik.menu is False and pencereOzellik.oyunAktif is False and pencereOzellik.oyunSonu is False:
@@ -933,6 +943,8 @@ def oyunCalistir():
         if pencereOzellik.oyunAktif is False and pencereOzellik.menu is True or pencereOzellik.duraklat is True:
             pencereOzellik.tuslariSerbestBirak()
         
+
+
         GorevCubugu.ciz()       #bunun en altta olmasının sebebi en son çizilip en üstte görünmesi görev çubuğunun
 
         sesDonguleri()
