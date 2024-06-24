@@ -45,10 +45,10 @@ class Pencere:
         self.ekranDikeyBoyut = 1100
         self.ekranYatayBoyut = 800
         self.fps = pygame.time.Clock()
-        self.oyunYuzeyi = pygame.display.set_mode((self.ekranYatayBoyut,self.ekranDikeyBoyut), pygame.NOFRAME)  #noframe windosun penceresini kapatıyor.  #doublebuf çift tamponlama yapıyor. değişiklikleri başka bi yüzde tutup sonrasında anayüzeye kopyalıyor. resimlerdeki titreme gibi şeyleri engelleyebiliyor ama ek kaynak kullanımı gibi durumları var o yüzden kullanmıyorum. diğer işletim sistemlerindede uyumsuzluğa yol açabiliyor. performans ve kaynak tüketimi artırıyor.
         self.icon = pygame.image.load(os.path.join('icon','simge.ico'))
-        pygame.display.set_icon(self.icon)
-        pygame.display.set_caption('RACE CAR')      #pencere başlığı, iconda ekleniyor sonra bak
+        pygame.display.set_icon(self.icon)                                              #aşağıda noframe ile windowu kapatarak başlatınca simgeyi ayarlamıyordu o yüzden pencere oluşturmadan önce simgesini ayarlıyoruzki simgeyi sürekli göstersin.
+        pygame.display.set_caption('RACE CAR')    
+        self.oyunYuzeyi = pygame.display.set_mode((self.ekranYatayBoyut,self.ekranDikeyBoyut), pygame.NOFRAME)  #noframe windowsun penceresini kapatıyor.  #doublebuf çift tamponlama yapıyor. değişiklikleri başka bi yüzde tutup sonrasında anayüzeye kopyalıyor. resimlerdeki titreme gibi şeyleri engelleyebiliyor ama ek kaynak kullanımı gibi durumları var o yüzden kullanmıyorum. diğer işletim sistemlerindede uyumsuzluğa yol açabiliyor. performans ve kaynak tüketimi artırıyor.
         self.menuArkaPlan = pygame.transform.scale(pygame.image.load(os.path.join('resim','1.jpg')),(self.ekranYatayBoyut,self.ekranDikeyBoyut))
         self.communicationArkaPlan = pygame.transform.scale(pygame.image.load(os.path.join('resim','2.jpg')),(self.ekranYatayBoyut,self.ekranDikeyBoyut))
         self.communicationYaziAyar = pygame.font.Font(os.path.join('font','5.TTF'),40)
