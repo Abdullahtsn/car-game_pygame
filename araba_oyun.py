@@ -14,6 +14,16 @@ else:
 pygame.init()
 pygame.mixer.init()
 
+'''pygame.event.set_allowed([pygame.QUIT,                   #event olaylarını sınırlandırmak istersen buraya ekle, sadece eklediğin eventler kontrol ediyor.
+                          pygame.MOUSEBUTTONDOWN, 
+                          pygame.MOUSEBUTTONUP, 
+                          pygame.KEYDOWN, 
+                          pygame.KEYUP, 
+                          pygame.USEREVENT, 
+                          pygame.USEREVENT+1, 
+                          pygame.USEREVENT+2, 
+                          pygame.USEREVENT+3,
+                          pygame.USEREVENT+4])'''
 
 class Pencere:
     def __init__(self) :
@@ -44,12 +54,11 @@ class Pencere:
         self.oyunHizi = self.O2
         self.puan = 0
         self.menuButonlarıBosluk = self.O4
-        self.icKenarRenk = (128,128,128)
-        self.disKenarRenk = (180,238,180)
-
-        
-        
-        
+        #self.icKenarRenk = (128,128,128)
+        #self.disKenarRenk = (180,238,180)
+        #self.disKenarRenk = (180, 200, 171)
+        self.icKenarRenk = (120,120,120)
+        self.disKenarRenk = (150, 200, 150)
         self.fps = pygame.time.Clock()
         self.icon = pygame.image.load(os.path.join('icon','simge.ico'))
         pygame.display.set_icon(self.icon)                                              #aşağıda noframe ile windowu kapatarak başlatınca simgeyi ayarlamıyordu o yüzden pencere oluşturmadan önce simgesini ayarlıyoruzki simgeyi sürekli göstersin.
@@ -133,10 +142,9 @@ class Pencere:
         self.O53 = round(self.ekranDikeyBoyut / 2.75)
         self.O54 = round(self.ekranDikeyBoyut / 3.143)
         self.O55 = round(self.ekranDikeyBoyut / 73.33)          #O19 değişkeninin yuvarlanmış hali. yuvarlanmayınca oyun hızını temsil ettiği için hata veriyor.
-        self.O56 = (self.ekranDikeyBoyut / 1100)                
+        self.O56 = self.ekranDikeyBoyut / 1100                
         self.O57 = round(self.ekranDikeyBoyut / 31.428)
         
-
     def herseyiSifirla(self):
         oyunIciSeviyeAyarlari.sagAgacListesi = []       #değişkenler ve listeler üzerinden yapılan tüm işlemleri sıfırlıyoruz ki en baştan başlasın
         oyunIciSeviyeAyarlari.solAgacListesi = []
@@ -154,6 +162,13 @@ class Pencere:
         arabaObj.x = pencereOzellik.oyunYuzeyi.get_width()/2 - arabaObj.genislik/ 2
         arabaObj.y = pencereOzellik.oyunYuzeyi.get_height() - self.O7
 
+        ilkSiraSerit.konumY = pencereOzellik.O10               #şeritlerin başlangıç konumuna tekrar ayarlanması için.(bozulmalar kaymalar olmaması için.)
+        ikinciSiraSerit.konumY = pencereOzellik.O13
+        ucuncuSiraSerit.konumY = pencereOzellik.O14
+        dorduncuSiraSerit.konumY = pencereOzellik.O15
+        besinciSiraSerit.konumY = pencereOzellik.O16
+        altinciSiraSerit.konumY = pencereOzellik.ekranDikeyBoyut
+
     def tuslariSerbestBirak(self):          #oyun ekranından  çıkınca eğer bi tuş basılıysa o true olarak kalıp tuşa basılıymış gibi devam ediyor. o yüzden hepsini false olarak ayarlıyoruz
         self.altTusBasili = False
         self.ustTusBasili = False
@@ -170,7 +185,8 @@ class SeritOlustur:
         self.yanSeritMesafe = pencereOzellik.O8
         self.konumX = pencereOzellik.O9
         self.seritUzunluk = pencereOzellik.O10
-        self.seritRenk = (224,255,255)
+        #self.seritRenk = (224,255,255)
+        self.seritRenk = (200,200,200)
         self.seritKalinlik = pencereOzellik.O11
 
     def seritCiz (self, hiz):
@@ -194,7 +210,6 @@ class AgacOlustur:
         self.seviyeResim = None
         self.seviyeyeAyarla()   
         
-
     def seviyeyeAyarla(self):                                   #amacı ; bulunulan seviyeye göre ayrılan 3 görselden rasgele bir tanesini seçip kullanması için
         if pencereOzellik.seviye == 1:
             self.seviyeResim = AgacOlustur.agacListesi[0:3]
@@ -207,11 +222,11 @@ class AgacOlustur:
         elif pencereOzellik.seviye == 5:
             self.seviyeResim = AgacOlustur.agacListesi[12:15]
         elif pencereOzellik.seviye == 6:
-            self.seviyeResim = AgacOlustur.agacListesi[15:18]
+            self.seviyeResim = AgacOlustur.agacListesi[12:15]
         elif pencereOzellik.seviye == 7:
             self.seviyeResim = AgacOlustur.agacListesi[15:18]
         elif pencereOzellik.seviye == 8:
-            self.seviyeResim = AgacOlustur.agacListesi[18:]
+            self.seviyeResim = AgacOlustur.agacListesi[15:18]       #korkunç ağaçlar hızdan dolayı pek belli olmadığı için çıkardım, eklemek istersen [18:] bunu ekle.
         self.secilen = self.seviyeResim[random.randint(0,2)]
     
     def agacCiz(self,bolge):
@@ -290,7 +305,6 @@ class MenuButonOlustur:
         pygame.time.delay(100)        #bu oyun döngüsünü duraklatmıyor
         #pygame.time.wait(5000)       #bu döngüyü duraklatıyor
         
-
     def butonGorev(self):
         if self.metinYazi == 'PLAY - RESUME':
             pencereOzellik.menu = False
@@ -521,7 +535,6 @@ class Options:
         self.sagOkVRect = pygame.Rect(self.sagOkVOlcu[0],self.sagOkVOlcu[1],self.okVSOlcu[0],self.okVSOlcu[1])
         self.solOkVRect = pygame.Rect(self.solOkVOlcu[0],self.solOkVOlcu[1],self.okVSOlcu[0],self.okVSOlcu[1])
         
-        
     def arabaGoster(self):
         pencereOzellik.oyunYuzeyi.blit((self.optionsArabaListe[self.secimIndex -1]), (pencereOzellik.oyunYuzeyi.get_width()/2 - self.optionsArabaListe[self.secimIndex -1].get_width()/2  ,pencereOzellik.oyunYuzeyi.get_height()/2 - self.optionsArabaListe[self.secimIndex -1].get_height()/2 - pencereOzellik.O30))
         #yukardaki şekilde yazarak aşağıdaki blokları ifade ettik hem karışıklığı hem gereksiz işlemleri azalttık. bu fonksiyondaki yorum satırlarıyla yukardaki tek satır aynı işlevi görüyor. initteki optionArabaListesindede bu yöntemi kullandım.
@@ -542,7 +555,6 @@ class Options:
         else:
             pass'''
     
-    
     def optionsCizimler(self):
         pencereOzellik.oyunYuzeyi.blit(pencereOzellik.optionsArkaPlan,(0,0))
         arabaKutu = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.kutularArkaPlan, self.arabaKutuOlcu , border_radius = pencereOzellik.O39)
@@ -557,7 +569,6 @@ class Options:
         pencereOzellik.oyunYuzeyi.blit(self.SagOkV, self.sagOkVOlcu)
         self.arabaGoster()
         
-
     def butonGorevler(self):
         fareX, fareY = pygame.mouse.get_pos()
         if self.solOkARect.collidepoint(fareX, fareY):
@@ -678,7 +689,6 @@ class Engeller(pygame.sprite.Sprite):
         self.rect = self.secilenResim.get_rect()
         self.mask = pygame.mask.from_surface(self.secilenResim)
 
-
     def engelCiz(self):    
         if self.tur == 'bariyer':
             self.y += pencereOzellik.oyunHizi
@@ -701,7 +711,6 @@ class Engeller(pygame.sprite.Sprite):
 
         self.rect.x = self.x
         self.rect.y = self.y
-        
 
         pencereOzellik.oyunYuzeyi.blit(self.secilenResim,(self.x, self.y))
     
@@ -733,7 +742,6 @@ class SeviyeAyarlar:
         self.engelListesi = []
         self.engelSpriteGrubu = pygame.sprite.Group()
 
-
     def seviyeSecim(self):
         if 0 <= pencereOzellik.puan < pencereOzellik.O30:
             pencereOzellik.seviye = 1
@@ -760,7 +768,6 @@ class SeviyeAyarlar:
             pencereOzellik.oyunHizi = pencereOzellik.O51
         elif pencereOzellik.O52 <= pencereOzellik.puan:     #1100 piksele göre 2000 puanı geçince hız 25 olcak.
             pencereOzellik.oyunHizi = pencereOzellik.O34
-
 
         pygame.draw.rect(pencereOzellik.oyunYuzeyi, pencereOzellik.disKenarRenk , self.disKenarOlcu)    
         pygame.draw.rect(pencereOzellik.oyunYuzeyi, pencereOzellik.icKenarRenk , self.IcKenarOlcu)
@@ -966,6 +973,29 @@ def oyunCalistir():
                         pencereOzellik.ustTusBasili = True
                     elif event.key == pygame.K_DOWN:
                         pencereOzellik.altTusBasili = True
+                if event.key == pygame.K_SPACE:
+                    if pencereOzellik.oyunAktif is True:
+                        pencereOzellik.menu = False
+                        pencereOzellik.oyunAktif = False
+                        pencereOzellik.communication = False
+                        pencereOzellik.options = False
+                        pencereOzellik.oyunSonu = False
+                        pencereOzellik.duraklat = True
+                    elif pencereOzellik.oyunAktif is False:
+                        pencereOzellik.menu = False
+                        pencereOzellik.oyunAktif = True
+                        pencereOzellik.communication = False
+                        pencereOzellik.options = False
+                        pencereOzellik.oyunSonu = False
+                        pencereOzellik.duraklat = False
+                elif event.key == pygame.K_ESCAPE:
+                    pencereOzellik.menu = True
+                    pencereOzellik.oyunAktif = False
+                    pencereOzellik.communication = False
+                    pencereOzellik.options = False
+                    pencereOzellik.oyunSonu = False
+                    pencereOzellik.duraklat = True
+                    
 
             if event.type == pygame.KEYUP:
                 if pencereOzellik.oyunAktif:
@@ -998,6 +1028,7 @@ def oyunCalistir():
                     oyunIciSeviyeAyarlari.engellerIcinZamanSec()
                     oyunIciSeviyeAyarlari.engelOlustur()    
 
+        
 
         if pencereOzellik.menu is True:     #menü çizimi ve efektler.
             menuyeGec()
@@ -1042,8 +1073,6 @@ def oyunCalistir():
 
         if pencereOzellik.oyunAktif is False and pencereOzellik.menu is True or pencereOzellik.duraklat is True:
             pencereOzellik.tuslariSerbestBirak()
-        
-
 
         GorevCubugu.ciz()       #bunun en altta olmasının sebebi en son çizilip en üstte görünmesi görev çubuğunun
 
@@ -1053,7 +1082,6 @@ def oyunCalistir():
         pencereOzellik.fps.tick(60)
         
         
-
 if __name__ == '__main__':      #bu bloğun anlamı: sadece bu py dosyası doğrudan çalıştırılıyorsa  işlemler gerçekleştiricek demek,
     oyunCalistir()                  #eğer bu py dosyası import edilirse o zaman bu blok çalıştırılmıycak demektir.
     
