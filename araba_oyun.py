@@ -36,14 +36,20 @@ class Pencere:
         self.sagTusBasili = False
         self.altTusBasili = False
         self.ustTusBasili= False
+        self.ekranDikeyBoyut = 0
+        self.ekranOlcuTespit()          #çözünürlük tespiti yapıp herşeyi ona oranla ölçekliycek iki fonksiyon bu ve alttaki.
+        self.ekranaOlcekle()
+        self.ekranYatayBoyut = self.O1
         self.seviye = 1
-        self.oyunHizi = 8
+        self.oyunHizi = self.O2
         self.puan = 0
-        self.menuButonlarıBosluk = 175
+        self.menuButonlarıBosluk = self.O4
         self.icKenarRenk = (128,128,128)
         self.disKenarRenk = (180,238,180)
-        self.ekranDikeyBoyut = 1100
-        self.ekranYatayBoyut = 800
+
+        
+        
+        
         self.fps = pygame.time.Clock()
         self.icon = pygame.image.load(os.path.join('icon','simge.ico'))
         pygame.display.set_icon(self.icon)                                              #aşağıda noframe ile windowu kapatarak başlatınca simgeyi ayarlamıyordu o yüzden pencere oluşturmadan önce simgesini ayarlıyoruzki simgeyi sürekli göstersin.
@@ -51,12 +57,85 @@ class Pencere:
         self.oyunYuzeyi = pygame.display.set_mode((self.ekranYatayBoyut,self.ekranDikeyBoyut), pygame.NOFRAME)  #noframe windowsun penceresini kapatıyor.  #doublebuf çift tamponlama yapıyor. değişiklikleri başka bi yüzde tutup sonrasında anayüzeye kopyalıyor. resimlerdeki titreme gibi şeyleri engelleyebiliyor ama ek kaynak kullanımı gibi durumları var o yüzden kullanmıyorum. diğer işletim sistemlerindede uyumsuzluğa yol açabiliyor. performans ve kaynak tüketimi artırıyor.
         self.menuArkaPlan = pygame.transform.scale(pygame.image.load(os.path.join('resim','1.jpg')),(self.ekranYatayBoyut,self.ekranDikeyBoyut))
         self.communicationArkaPlan = pygame.transform.scale(pygame.image.load(os.path.join('resim','2.jpg')),(self.ekranYatayBoyut,self.ekranDikeyBoyut))
-        self.communicationYaziAyar = pygame.font.Font(os.path.join('font','5.TTF'),40)
+        self.communicationYaziAyar = pygame.font.Font(os.path.join('font','5.TTF'), self.O3)
         self.optionsArkaPlan = pygame.image.load(os.path.join('resim','3.jpg'))             #burda optionsda görünecek resmi yükleyip,
         self.optionsArkaPlan = pygame.transform.rotate(self.optionsArkaPlan,90)             #resmin normal görünüşü yataya uygun olduğu için dikey boyutlanınca iyi görünmüyor o yüzden 90 derece döndürüp
         self.optionsArkaPlan = pygame.transform.scale(self.optionsArkaPlan,(self.ekranYatayBoyut,self.ekranDikeyBoyut))     #ekrana göre ölçeklemesini yapıyoruz. hepsini aynı değişkene atıp ona işlem yaptıkki farklı farklı değişkenler oluşmasın. eldeki değişkeni güncelledik sürekli
-        self.oyunSonuYaziAyar = pygame.font.Font(os.path.join('font','13.ttf'),75)
-        self.oyunSonuArkaPlan = pygame.transform.scale(pygame.image.load(os.path.join('resim','7.jpg')),(self.ekranYatayBoyut +50,self.ekranDikeyBoyut))     #score yazısını ay resmine ortalasın diye ekranın biraz soluncan başlatıcaz o yüzden xi biraz büyük alıyoruz.
+        self.oyunSonuYaziAyar = pygame.font.Font(os.path.join('font','13.ttf'), self.O5)
+        self.oyunSonuArkaPlan = pygame.transform.scale(pygame.image.load(os.path.join('resim','7.jpg')),(self.ekranYatayBoyut + self.O6 ,self.ekranDikeyBoyut))     #score yazısını ay resmine ortalasın diye ekranın biraz soluncan başlatıcaz o yüzden xi biraz büyük alıyoruz.
+    
+    def ekranOlcuTespit(self):
+        a = pygame.display.get_desktop_sizes()
+        olcuYatayTespit, olcuDikeyTespit = a[0]     #kullanıcı ekran ölçüleri alma.
+        print(olcuDikeyTespit)
+        if olcuDikeyTespit <= 800:
+            self.ekranDikeyBoyut = 690
+        elif 800 < olcuDikeyTespit <= 1100:
+            self.ekranDikeyBoyut = 910
+        elif 1100 < olcuDikeyTespit <= 1440:
+            self.ekranDikeyBoyut = 1100
+        elif 1440 < olcuDikeyTespit:
+            self.ekranDikeyBoyut = 1480
+
+    def ekranaOlcekle(self):                            #ölçeklemeler yatay 800, dikey 1100 ona göre ayarlandı. eklenicek bişey olursa 1100 e çek ölçü ol oranı öyle belirle.
+        self.O1 = round(self.ekranDikeyBoyut / 1.375)
+        self.O2 = round(self.ekranDikeyBoyut / 137.5) 
+        self.O3 = round(self.ekranDikeyBoyut / 27.5)
+        self.O4 = round(self.ekranDikeyBoyut / 6.28)
+        self.O5 = round(self.ekranDikeyBoyut / 14.66)
+        self.O6 = round(self.ekranDikeyBoyut / 22)
+        self.O7 = round(self.ekranDikeyBoyut/ 5.116)
+        self.O8 = round(self.ekranDikeyBoyut / 8)
+        self.O9 = round(self.ekranDikeyBoyut / 4.19)
+        self.O10 = round(self.ekranDikeyBoyut / 11)
+        self.O11 = round(self.ekranDikeyBoyut / 220)
+        self.O12 = round(self.ekranDikeyBoyut/ 15.714)
+        self.O13 = round(self.ekranDikeyBoyut / 3.66)
+        self.O14 = round(self.ekranDikeyBoyut / 2.2)
+        self.O15 = round(self.ekranDikeyBoyut / 1.571)
+        self.O16 = round(self.ekranDikeyBoyut / 1.22)
+        self.O17 = round(self.ekranDikeyBoyut / 5.5)
+        self.O18 = round(self.ekranDikeyBoyut / 55) 
+        self.O19 = self.ekranDikeyBoyut / 73.33                 #burdaki 3 değer menü kısmının efektinde kullanıldığı için yuvarlayınca efekt çizimleri bozuluyor o yüzden buraları sadece menüde kullanıp roundsuz yazdım.
+        self.O20 = self.ekranDikeyBoyut / 366.66
+        self.O21 = self.ekranDikeyBoyut / 183.33
+        self.O22 = round(self.ekranDikeyBoyut / 110)
+        self.O23 = round(self.ekranDikeyBoyut / 8.148)
+        self.O24 = round(self.ekranDikeyBoyut / 8.088)
+        self.O25 = round(self.ekranDikeyBoyut / 15.277)
+        self.O26 = round(self.ekranDikeyBoyut / 9.166)
+        self.O27 = round(self.ekranDikeyBoyut / 4.782)
+        self.O28 = round(self.ekranDikeyBoyut / 4.583)
+        self.O29 = round(self.ekranDikeyBoyut / 7.333)
+        self.O30 = round(self.ekranDikeyBoyut / 13.75)
+        self.O31 = round(self.ekranDikeyBoyut / 18.333)
+        self.O32 = round(self.ekranDikeyBoyut / 24.444)
+        self.O33 = round(self.ekranDikeyBoyut / 16.418)
+        self.O34 = round(self.ekranDikeyBoyut / 44)
+        self.O35 = round(self.ekranDikeyBoyut / 14.864)
+        self.O36 = round(self.ekranDikeyBoyut / 20.754)
+        self.O37 = round(self.ekranDikeyBoyut / 14.285)
+        self.O38 = round(self.ekranDikeyBoyut / 2.444)
+        self.O39 = round(self.ekranDikeyBoyut / 36.666)
+        self.O40 = round(self.ekranDikeyBoyut / 8.8)
+        self.O41 = round(self.ekranDikeyBoyut / 6.470)
+        self.O42 = round(self.ekranDikeyBoyut / 4.074)
+        self.O43 = round(self.ekranDikeyBoyut / 2.894)
+        self.O44 = round(self.ekranDikeyBoyut / 1.774)
+        self.O45 = round(self.ekranDikeyBoyut / 1.164)
+        self.O46 = round(self.ekranDikeyBoyut / 0.788)
+        self.O47 = round(self.ekranDikeyBoyut / 122.222)
+        self.O48 = round(self.ekranDikeyBoyut / 100)
+        self.O49 = round(self.ekranDikeyBoyut / 91.666)
+        self.O50 = round(self.ekranDikeyBoyut / 84.615)
+        self.O51 = round(self.ekranDikeyBoyut / 61.111)
+        self.O52 = round(self.ekranDikeyBoyut / 0.55)
+        self.O53 = round(self.ekranDikeyBoyut / 2.75)
+        self.O54 = round(self.ekranDikeyBoyut / 3.143)
+        self.O55 = round(self.ekranDikeyBoyut / 73.33)          #O19 değişkeninin yuvarlanmış hali. yuvarlanmayınca oyun hızını temsil ettiği için hata veriyor.
+        self.O56 = (self.ekranDikeyBoyut / 1100)                
+        self.O57 = round(self.ekranDikeyBoyut / 31.428)
+        
 
     def herseyiSifirla(self):
         oyunIciSeviyeAyarlari.sagAgacListesi = []       #değişkenler ve listeler üzerinden yapılan tüm işlemleri sıfırlıyoruz ki en baştan başlasın
@@ -64,7 +143,7 @@ class Pencere:
         oyunIciSeviyeAyarlari.engelListesi = []
         self.seviye = 1
         self.puan = 0
-        self.oyunHizi = 8
+        self.oyunHizi = self.O2 
         self.oyunAktif = False
         self.options = False
         self.duraklat = True
@@ -72,14 +151,14 @@ class Pencere:
         self.oyunMuzigiDurakladı = False
         self.oyunMuzikBastanBasla = True
         self.tuslariSerbestBirak()
-        arabaObj.x = pencereOzellik.oyunYuzeyi.get_width()/2 - arabaObj.genislik/2
-        arabaObj.y = pencereOzellik.oyunYuzeyi.get_height() - 215
+        arabaObj.x = pencereOzellik.oyunYuzeyi.get_width()/2 - arabaObj.genislik/ 2
+        arabaObj.y = pencereOzellik.oyunYuzeyi.get_height() - self.O7
 
     def tuslariSerbestBirak(self):          #oyun ekranından  çıkınca eğer bi tuş basılıysa o true olarak kalıp tuşa basılıymış gibi devam ediyor. o yüzden hepsini false olarak ayarlıyoruz
-            self.altTusBasili = False
-            self.ustTusBasili = False
-            self.solTusBasili = False
-            self.sagTusBasili = False
+        self.altTusBasili = False
+        self.ustTusBasili = False
+        self.solTusBasili = False
+        self.sagTusBasili = False
             
 
 pencereOzellik = Pencere()
@@ -88,11 +167,11 @@ pencereOzellik = Pencere()
 class SeritOlustur:
     def __init__(self, konumY ):       #dikey olduğu için x sabit, y1 = başlangıç, y2 = bitiş
         self.konumY = konumY
-        self.yanSeritMesafe = 137.5
-        self.konumX = 262.5
-        self.seritUzunluk = 100
+        self.yanSeritMesafe = pencereOzellik.O8
+        self.konumX = pencereOzellik.O9
+        self.seritUzunluk = pencereOzellik.O10
         self.seritRenk = (224,255,255)
-        self.seritKalinlik = 5
+        self.seritKalinlik = pencereOzellik.O11
 
     def seritCiz (self, hiz):
         pygame.draw.line(pencereOzellik.oyunYuzeyi, self.seritRenk , [self.konumX ,self.konumY], 
@@ -101,14 +180,14 @@ class SeritOlustur:
                          [ (self.konumX + self.yanSeritMesafe) ,self.konumY + self.seritUzunluk], self.seritKalinlik)
         pygame.draw.line(pencereOzellik.oyunYuzeyi, self.seritRenk , [ (self.konumX + (self.yanSeritMesafe *2)) ,self.konumY], 
                          [ (self.konumX + (self.yanSeritMesafe *2)) ,self.konumY + self.seritUzunluk], self.seritKalinlik)
-        self.konumY += hiz
+        self.konumY += hiz 
 
 
 class AgacOlustur:
-    agacListesi = [pygame.transform.scale(pygame.image.load(os.path.join('agac',f'{i}.png')).convert_alpha(),(70, 70)) for i in range(1,22)]    #initten önce tanımlayıp oluşturulcak olan yüzlerce ağaç için tekrar tekrar yüklenmesinin önüne geçtik sadece bir kere yüklenip sonrakilerde bu yüklenen kullanılcak.
+    agacListesi = [pygame.transform.scale(pygame.image.load(os.path.join('agac',f'{i}.png')).convert_alpha(),(pencereOzellik.O12, pencereOzellik.O12)) for i in range(1,22)]    #initten önce tanımlayıp oluşturulcak olan yüzlerce ağaç için tekrar tekrar yüklenmesinin önüne geçtik sadece bir kere yüklenip sonrakilerde bu yüklenen kullanılcak.
     def __init__(self):
-        self.agacGenislik = 70
-        self.agacYukseklik = 70
+        self.agacGenislik = pencereOzellik.O12
+        self.agacYukseklik = pencereOzellik.O12
         self.solAgacX = ((0 + oyunIciSeviyeAyarlari.IcKenarOlcu[0]) /2) - (self.agacGenislik/2)
         self.sagAgacX = (oyunIciSeviyeAyarlari.IcKenarOlcu[0] + oyunIciSeviyeAyarlari.IcKenarOlcu[2]) + (( pencereOzellik.oyunYuzeyi.get_width() - oyunIciSeviyeAyarlari.IcKenarOlcu[0] - oyunIciSeviyeAyarlari.IcKenarOlcu[2]) /2 - self.agacGenislik/2)
         self.agacY = -94     #ekranın üst kısımdan başlayarak inmesi için. y koordinatı ikisindede aynı ilerleyişte  olcağı için tek değişken
@@ -143,12 +222,12 @@ class AgacOlustur:
         self.agacY += pencereOzellik.oyunHizi
     
 
-ilkSiraSerit = SeritOlustur(100)
-ikinciSiraSerit = SeritOlustur(300)
-ucuncuSiraSerit = SeritOlustur(500)
-dorduncuSiraSerit = SeritOlustur(700)
-besinciSiraSerit = SeritOlustur(900)
-altinciSiraSerit = SeritOlustur(1100)
+ilkSiraSerit = SeritOlustur(pencereOzellik.O10)
+ikinciSiraSerit = SeritOlustur(pencereOzellik.O13)
+ucuncuSiraSerit = SeritOlustur(pencereOzellik.O14)
+dorduncuSiraSerit = SeritOlustur(pencereOzellik.O15)
+besinciSiraSerit = SeritOlustur(pencereOzellik.O16)
+altinciSiraSerit = SeritOlustur(pencereOzellik.ekranDikeyBoyut)
      
 def seritAyarlamalari():
     seritListesi = [ilkSiraSerit, ikinciSiraSerit, ucuncuSiraSerit, dorduncuSiraSerit, besinciSiraSerit, altinciSiraSerit]
@@ -175,37 +254,37 @@ class MenuButonOlustur:
         self.metinOlcu = self.metinPasif.get_rect()      #oluşturulan yazının  kenar kısımlarının genişlik uzunluk ölçülerini veriyor.
         self.konumY = konumY
         self.metinBaslamaNoktası = (pencereOzellik.ekranYatayBoyut / 2 ) - (self.metinOlcu.width / 2)    #metinölçü.width yerine metinölçü[2] de yazabiliriz aynı sonuç.
-        self.kutuIcınBaslamaNoktasıX = 200                                           #soldan 200 piksel ilerden başlaması için
-        self.kutuIcınBitisNoktasıX = pencereOzellik.ekranYatayBoyut + (-200 *2)      #200 piksel ileride başladığı için ekran boyutundan 2 kere iki yüz çıkararak hem baştan hem sondan 200 piksellik ortalı bi kutu oluşturduk
-        self.kutuIcınBaslamaNoktasıY = self.konumY - 20                              #kutunun ilk başlangıç dikey konumu. -20 ise kutu çiziminin yazının birazcık daha üstünden başlaması için
-        self.kutuIcınBitisNoktasıY = self.metinOlcu.height + 40                      #yazının dikey ölçüsü ile yukarda yazı ile arasında fazla boşluk olması için bıraktığımız -20 değerinin alt kısımdada geçerli olması için 2 ile çarpıp artı değere dönüştürme
+        self.kutuIcınBaslamaNoktasıX = pencereOzellik.O17                                         #soldan boyuta göre orantılı belli bi piksel ilerden başlaması için
+        self.kutuIcınBitisNoktasıX = pencereOzellik.ekranYatayBoyut + ( - (pencereOzellik.O17)  *2)      #soldan belli bi piksel ilerde başladığı için bu sayıyı sağdanda orantılamak için ikiyle çarptım.
+        self.kutuIcınBaslamaNoktasıY = self.konumY - pencereOzellik.O18                             #kutunun ilk başlangıç dikey konumu. -20 ise kutu çiziminin yazının birazcık daha üstünden başlaması için.(burda normalde -20 yazıyordu ekran ölçüleriyle optimize etmek için oran kullanıldı.)
+        self.kutuIcınBitisNoktasıY = self.metinOlcu.height + pencereOzellik.O3                      #yazının dikey ölçüsü ile yukarda yazı ile arasında fazla boşluk olması için bıraktığımız -20 değerinin alt kısımdada geçerli olması için 2 ile çarpıp artı değere dönüştürme
         self.cerceve = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.cercevePasifRenk, (self.kutuIcınBaslamaNoktasıX, self.kutuIcınBaslamaNoktasıY, self.kutuIcınBitisNoktasıX, self.kutuIcınBitisNoktasıY))
         
     def menuButonEfekt(self, yuzey):        #metnin yatay olarak kapladığı alanı hesaplayıp yatay konumda ortalı yazdırma.
         if self.butonEfektAktif is True :
-            if self.kutuIcınBaslamaNoktasıX >= 15 :     #ekranın dışında sonsuza dek gitmesin diye köşelere az kala durması için
-                self.kutuIcınBaslamaNoktasıX -= 3       #sola doğru genişlemesi için
-                self.kutuIcınBitisNoktasıX += 6         #sağa doğru soldakiyle aynı orantıda genişlemesi için
+            if self.kutuIcınBaslamaNoktasıX >= pencereOzellik.O19 :     #ekranın dışında sonsuza dek gitmesin diye köşelere az kala durması için
+                self.kutuIcınBaslamaNoktasıX -= pencereOzellik.O20       #sola doğru genişlemesi için
+                self.kutuIcınBitisNoktasıX += pencereOzellik.O21        #sağa doğru soldakiyle aynı orantıda genişlemesi için
                 self.butonCizYaziYaz()
             else:
                 self.butonCizYaziYaz()
         elif self.butonEfektAktif is False:
-            self.kutuIcınBaslamaNoktasıX = 200                                           #ilk 4 özellik inittede tanımlı ama kutuların başlangıç konumlarından tekrar büyüyerek gitmesi için burda tekrar ilk değerlerine eşitliyoruz
-            self.kutuIcınBitisNoktasıX = pencereOzellik.ekranYatayBoyut + (-200 *2)      
-            self.kutuIcınBaslamaNoktasıY = self.konumY - 20                              
-            self.kutuIcınBitisNoktasıY = self.metinOlcu.height + 40
+            self.kutuIcınBaslamaNoktasıX = pencereOzellik.O17                                           #ilk 4 özellik inittede tanımlı ama kutuların başlangıç konumlarından tekrar büyüyerek gitmesi için burda tekrar ilk değerlerine eşitliyoruz
+            self.kutuIcınBitisNoktasıX = pencereOzellik.ekranYatayBoyut + ( - (pencereOzellik.O17 ) *2)      
+            self.kutuIcınBaslamaNoktasıY = self.konumY - pencereOzellik.O18                            
+            self.kutuIcınBitisNoktasıY = self.metinOlcu.height + pencereOzellik.O3
             self.butonCizYaziYaz()                                                       #çerçeve özelliklerini ayarlamak ve ekranda değişiklikleri göstermek için blitinde olduğu fonksiyona gönderiyoruz
               
     def butonCizYaziYaz(self):
         if self.butonEfektAktif is True:
-            self.cerceve = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.cerceveAktifRenk, (self.kutuIcınBaslamaNoktasıX, self.kutuIcınBaslamaNoktasıY, self.kutuIcınBitisNoktasıX, self.kutuIcınBitisNoktasıY),border_top_left_radius=30, border_bottom_right_radius=30)     #sırasıyla(ilk değer 0 sa içi dolu diğer pozitif değerler içi boş ve arttıkça kenar kalınlığı, ikinci değer tüm kenarları yuvarlatma, diğer 4 değer ayrı ayrı kenarları yuvarlatma)
+            self.cerceve = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.cerceveAktifRenk, (self.kutuIcınBaslamaNoktasıX, self.kutuIcınBaslamaNoktasıY, self.kutuIcınBitisNoktasıX, self.kutuIcınBitisNoktasıY),border_top_left_radius = pencereOzellik.O39, border_bottom_right_radius = pencereOzellik.O39)     #sırasıyla(ilk değer 0 sa içi dolu diğer pozitif değerler içi boş ve arttıkça kenar kalınlığı, ikinci değer tüm kenarları yuvarlatma, diğer 4 değer ayrı ayrı kenarları yuvarlatma)
             pencereOzellik.oyunYuzeyi.blit(self.metinAktif,(self.metinBaslamaNoktası,self.konumY))         
         elif self.butonEfektAktif is False:
-            self.cerceve = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.cercevePasifRenk, (self.kutuIcınBaslamaNoktasıX, self.kutuIcınBaslamaNoktasıY, self.kutuIcınBitisNoktasıX, self.kutuIcınBitisNoktasıY),border_top_left_radius=30, border_bottom_right_radius=30)
+            self.cerceve = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.cercevePasifRenk, (self.kutuIcınBaslamaNoktasıX, self.kutuIcınBaslamaNoktasıY, self.kutuIcınBitisNoktasıX, self.kutuIcınBitisNoktasıY),border_top_left_radius = pencereOzellik.O39, border_bottom_right_radius = pencereOzellik.O39)
             pencereOzellik.oyunYuzeyi.blit(self.metinPasif,(self.metinBaslamaNoktası,self.konumY)) 
 
     def butonTiklamaEfekt(self):    #fare tuşuna basınca butonların kenarında kenarlık oluşturma
-        ciz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.kenarlikRenk, (self.cerceve.x -10, self.cerceve.y -10, self.cerceve.width +20, self.cerceve.height +20),3,border_top_left_radius=35, border_bottom_right_radius=35)
+        ciz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.kenarlikRenk, (self.cerceve.x - pencereOzellik.O22 , self.cerceve.y - pencereOzellik.O22, self.cerceve.width + pencereOzellik.O18 , self.cerceve.height + pencereOzellik.O18 ),3,border_top_left_radius = pencereOzellik.O57, border_bottom_right_radius = pencereOzellik.O57)
         pygame.display.update(ciz)         #buton arka planının tıklanınca etrafında çerçeve olması
         sesler.menuButonSes()         #menüdeki tüm butonlar için tıklanınca kenarlık resmi çizen fonksiyona koyup tüm butonlar için tek satırlık ses komutu koyduk, yoksa aşağıda her buton için ayrı ayrı koycaktık.
         pygame.time.delay(100)        #bu oyun döngüsünü duraklatmıyor
@@ -218,31 +297,36 @@ class MenuButonOlustur:
             pencereOzellik.oyunAktif = True
             pencereOzellik.duraklat = False
             pencereOzellik.options = False
+            pencereOzellik.communication = False
+            pencereOzellik.oyunSonu = False
         elif self.metinYazi == 'RESTART':
             pencereOzellik.herseyiSifirla()
         elif self.metinYazi == 'OPTIONS':
             pencereOzellik.oyunAktif = False
             pencereOzellik.menu = False
             pencereOzellik.options = True
+            pencereOzellik.oyunSonu = False
+            pencereOzellik.communication = False
         elif self.metinYazi == 'COMMUNICATION':
             pencereOzellik.oyunAktif = False
             pencereOzellik.menu = False
             pencereOzellik.communication = True
             pencereOzellik.options = False
+            pencereOzellik.oyunSonu = False
         else:
             pass
 
 
 class PencereCubuk:
     def __init__(self) :
-        self.simgeBoyut = 50
-        self.cubukKoordinat = (0,0,pencereOzellik.oyunYuzeyi.get_width(),50)
+        self.simgeBoyut = pencereOzellik.O6
+        self.cubukKoordinat = (0,0,pencereOzellik.oyunYuzeyi.get_width(),pencereOzellik.O6)
         self.mCubukRenk = (0,0,0)
         self.rcubukRenk = (169,122,239)
         self.gorevCubuguCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.mCubukRenk, self.cubukKoordinat)
         self.gizleyiciKoordinat = (((self.gorevCubuguCiz.w/2) - (self.simgeBoyut/2)), 0, self.simgeBoyut , self.simgeBoyut )
-        self.katsayi = 75
-        self.pauseFont = pygame.font.Font(os.path.join('font','1.ttf'),135)
+        self.katsayi = pencereOzellik.O5
+        self.pauseFont = pygame.font.Font(os.path.join('font','1.ttf'), pencereOzellik.O23)
         self.pauseFontCiz = self.pauseFont.render('PAUSED',True,(204, 190, 159))
         self.pauseFontCerceveOlcu = self.pauseFontCiz.get_rect()
         
@@ -276,34 +360,34 @@ class PencereCubuk:
     def ciz(self):  
         if pencereOzellik.ozelCubukAcik is True:
             if pencereOzellik.modernTema is True:
-                self.gorevCubuguCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.mCubukRenk, self.cubukKoordinat, border_bottom_left_radius= 10, border_bottom_right_radius= 10)
-                self.menuKonum = pencereOzellik.oyunYuzeyi.blit(self.mmenu, (10 , 0))
-                self.gizleyiciBolgesiCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.mCubukRenk, self.gizleyiciKoordinat,border_bottom_left_radius= 10, border_bottom_right_radius= 10)
+                self.gorevCubuguCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.mCubukRenk, self.cubukKoordinat, border_bottom_left_radius = pencereOzellik.O22, border_bottom_right_radius = pencereOzellik.O22)
+                self.menuKonum = pencereOzellik.oyunYuzeyi.blit(self.mmenu, (pencereOzellik.O22 , 0))
+                self.gizleyiciBolgesiCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.mCubukRenk, self.gizleyiciKoordinat,border_bottom_left_radius = pencereOzellik.O22, border_bottom_right_radius = pencereOzellik.O22)
                 if pencereOzellik.sesAcik is True:
-                    self.soundKonum = pencereOzellik.oyunYuzeyi.blit(self.msound, (10 + self.katsayi *1, 0))
+                    self.soundKonum = pencereOzellik.oyunYuzeyi.blit(self.msound, (pencereOzellik.O22 + self.katsayi *1, 0))
                 elif pencereOzellik.sesAcik is False:
-                    self.soundKonum = pencereOzellik.oyunYuzeyi.blit(self.msound2, (10 + self.katsayi *1, 0))
+                    self.soundKonum = pencereOzellik.oyunYuzeyi.blit(self.msound2, (pencereOzellik.O22 + self.katsayi *1, 0))
                 if pencereOzellik.duraklat is True:
-                    self.playPauseKonum = pencereOzellik.oyunYuzeyi.blit(self.mplay, (10 + self.katsayi *2, 0))
+                    self.playPauseKonum = pencereOzellik.oyunYuzeyi.blit(self.mplay, (pencereOzellik.O22 + self.katsayi *2, 0))
                 elif pencereOzellik.duraklat is False:
-                    self.playPauseKonum =  pencereOzellik.oyunYuzeyi.blit(self.mpause, (10 + self.katsayi *2, 0))
+                    self.playPauseKonum =  pencereOzellik.oyunYuzeyi.blit(self.mpause, (pencereOzellik.O22 + self.katsayi *2, 0))
                 self.arrowKonum = pencereOzellik.oyunYuzeyi.blit(self.mup, (((self.gorevCubuguCiz.w /2) - (self.simgeBoyut/2)) , 0))
                 self.themaKonum = pencereOzellik.oyunYuzeyi.blit(self.mthema, (self.gorevCubuguCiz.width - self.katsayi *3,0))
                 self.consolKonum = pencereOzellik.oyunYuzeyi.blit(self.mconsol, (self.gorevCubuguCiz.width - self.katsayi *2,0))
                 self.closeKonum =  pencereOzellik.oyunYuzeyi.blit(self.mclose, (self.gorevCubuguCiz.width - self.katsayi,0))
 
             elif pencereOzellik.modernTema is False:
-                self.gorevCubuguCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.rcubukRenk, self.cubukKoordinat, border_bottom_left_radius= 10, border_bottom_right_radius= 10)
-                self.menuKonum = pencereOzellik.oyunYuzeyi.blit(self.rmenu, (10 , 0))
-                self.gizleyiciBolgesiCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.rcubukRenk, self.gizleyiciKoordinat,border_bottom_left_radius= 10, border_bottom_right_radius= 10)
+                self.gorevCubuguCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.rcubukRenk, self.cubukKoordinat, border_bottom_left_radius = pencereOzellik.O22, border_bottom_right_radius = pencereOzellik.O22)
+                self.menuKonum = pencereOzellik.oyunYuzeyi.blit(self.rmenu, (pencereOzellik.O22 , 0))
+                self.gizleyiciBolgesiCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.rcubukRenk, self.gizleyiciKoordinat,border_bottom_left_radius = pencereOzellik.O22, border_bottom_right_radius = pencereOzellik.O22)
                 if pencereOzellik.sesAcik is True:
-                    self.soundKonum = pencereOzellik.oyunYuzeyi.blit(self.rsound, (10 + self.katsayi *1, 0))
+                    self.soundKonum = pencereOzellik.oyunYuzeyi.blit(self.rsound, (pencereOzellik.O22 + self.katsayi *1, 0))
                 elif pencereOzellik.sesAcik is False:
-                    self.soundKonum = pencereOzellik.oyunYuzeyi.blit(self.rsound2, (10 + self.katsayi *1, 0))
+                    self.soundKonum = pencereOzellik.oyunYuzeyi.blit(self.rsound2, (pencereOzellik.O22 + self.katsayi *1, 0))
                 if pencereOzellik.duraklat is True:
-                    self.playPauseKonum = pencereOzellik.oyunYuzeyi.blit(self.rplay, (10 + self.katsayi *2, 0))
+                    self.playPauseKonum = pencereOzellik.oyunYuzeyi.blit(self.rplay, (pencereOzellik.O22 + self.katsayi *2, 0))
                 elif pencereOzellik.duraklat is False:
-                    self.playPauseKonum =  pencereOzellik.oyunYuzeyi.blit(self.rpause, (10 + self.katsayi *2, 0))
+                    self.playPauseKonum =  pencereOzellik.oyunYuzeyi.blit(self.rpause, (pencereOzellik.O22 + self.katsayi *2, 0))
                 self.arrowKonum = pencereOzellik.oyunYuzeyi.blit(self.rup, (((self.gorevCubuguCiz.w /2) - (self.simgeBoyut/2)) , 0))
                 self.themaKonum = pencereOzellik.oyunYuzeyi.blit(self.rthema, (self.gorevCubuguCiz.width - self.katsayi *3,0))
                 self.consolKonum = pencereOzellik.oyunYuzeyi.blit(self.rconsol, (self.gorevCubuguCiz.width - self.katsayi *2,0))
@@ -311,10 +395,10 @@ class PencereCubuk:
 
         elif pencereOzellik.ozelCubukAcik is False:
             if pencereOzellik.modernTema is True:
-                self.gizleyiciBolgesiCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.mCubukRenk, ( self.gizleyiciKoordinat ) ,border_bottom_left_radius= 15, border_bottom_right_radius= 15)
+                self.gizleyiciBolgesiCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.mCubukRenk, ( self.gizleyiciKoordinat ) ,border_bottom_left_radius = pencereOzellik.O55, border_bottom_right_radius = pencereOzellik.O55)
                 self.arrowKonum = pencereOzellik.oyunYuzeyi.blit(self.mdown, (((self.gorevCubuguCiz.w /2) - (self.simgeBoyut/2)) , 0))
             elif pencereOzellik.modernTema is False:
-                self.gizleyiciBolgesiCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.rcubukRenk, ( self.gizleyiciKoordinat ) ,border_bottom_left_radius= 15, border_bottom_right_radius= 15)
+                self.gizleyiciBolgesiCiz = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.rcubukRenk, ( self.gizleyiciKoordinat ) ,border_bottom_left_radius = pencereOzellik.O55, border_bottom_right_radius = pencereOzellik.O55)
                 self.arrowKonum = pencereOzellik.oyunYuzeyi.blit(self.rdown, (((self.gorevCubuguCiz.w /2) - (self.simgeBoyut/2)) , 0))
             
 
@@ -344,12 +428,15 @@ class PencereCubuk:
                     pencereOzellik.oyunAktif = True
                     pencereOzellik.menu = False
                     pencereOzellik.oyunSonu = False
+                    pencereOzellik.communication = False
+                    pencereOzellik.options = False
                 elif pencereOzellik.duraklat is False:
                     pencereOzellik.options = False
                     pencereOzellik.duraklat = True
                     pencereOzellik.oyunAktif = False
                     pencereOzellik.communication = False 
                     pencereOzellik.oyunSonu = False
+                    pencereOzellik.menu = False
                      
                 sesler.gorevButonSes()
             elif self.arrowKonum.collidepoint(fare_X, fare_Y):
@@ -385,26 +472,26 @@ class PencereCubuk:
 GorevCubugu = PencereCubuk() 
 
 menuButonSayisi = 4
-play = MenuButonOlustur('PLAY - RESUME', 40, (((pencereOzellik.oyunYuzeyi.get_height() - GorevCubugu.gorevCubuguCiz.height) / menuButonSayisi) + GorevCubugu.gorevCubuguCiz.height/2 + (pencereOzellik.menuButonlarıBosluk *0)))      #yazı tipleri bilgisayarda kayıtlı olanları alıyor. stilini değiştirmek  istersne kayıtlı olanların yolu C > Windows > Fonts
-restart = MenuButonOlustur('RESTART', 40, (((pencereOzellik.oyunYuzeyi.get_height() - GorevCubugu.gorevCubuguCiz.height) / menuButonSayisi) + GorevCubugu.gorevCubuguCiz.height/2 + (pencereOzellik.menuButonlarıBosluk *1)))      #bu yazı tipleri olmayan bilgisayarlarda sorun çıkmasın diye uygulama için kopyalayıp onların yolunu verdim.
-options = MenuButonOlustur('OPTIONS', 40, (((pencereOzellik.oyunYuzeyi.get_height() - GorevCubugu.gorevCubuguCiz.height) / menuButonSayisi) + GorevCubugu.gorevCubuguCiz.height/2 + (pencereOzellik.menuButonlarıBosluk *2)))         #yatay düzlemde ortaladığımız için sınıf oluştururken x almıyoruz. otomatik hesaplıyoruz x i.
-communication = MenuButonOlustur('COMMUNICATION', 40, (((pencereOzellik.oyunYuzeyi.get_height() - GorevCubugu.gorevCubuguCiz.height) / menuButonSayisi) + GorevCubugu.gorevCubuguCiz.height/2 + (pencereOzellik.menuButonlarıBosluk *3)))              #mümkün olduğunca sistemli ve ortalı olması için belirli formülle dikey düzlemlerine göre çizdirdim.
+play = MenuButonOlustur('PLAY - RESUME', pencereOzellik.O3 , (((pencereOzellik.oyunYuzeyi.get_height() - GorevCubugu.gorevCubuguCiz.height) / menuButonSayisi) + GorevCubugu.gorevCubuguCiz.height/2 + (pencereOzellik.menuButonlarıBosluk *0)))      #yazı tipleri bilgisayarda kayıtlı olanları alıyor. stilini değiştirmek  istersne kayıtlı olanların yolu C > Windows > Fonts
+restart = MenuButonOlustur('RESTART', pencereOzellik.O3, (((pencereOzellik.oyunYuzeyi.get_height() - GorevCubugu.gorevCubuguCiz.height) / menuButonSayisi) + GorevCubugu.gorevCubuguCiz.height/2 + (pencereOzellik.menuButonlarıBosluk *1)))      #bu yazı tipleri olmayan bilgisayarlarda sorun çıkmasın diye uygulama için kopyalayıp onların yolunu verdim.
+options = MenuButonOlustur('OPTIONS', pencereOzellik.O3, (((pencereOzellik.oyunYuzeyi.get_height() - GorevCubugu.gorevCubuguCiz.height) / menuButonSayisi) + GorevCubugu.gorevCubuguCiz.height/2 + (pencereOzellik.menuButonlarıBosluk *2)))         #yatay düzlemde ortaladığımız için sınıf oluştururken x almıyoruz. otomatik hesaplıyoruz x i.
+communication = MenuButonOlustur('COMMUNICATION', pencereOzellik.O3, (((pencereOzellik.oyunYuzeyi.get_height() - GorevCubugu.gorevCubuguCiz.height) / menuButonSayisi) + GorevCubugu.gorevCubuguCiz.height/2 + (pencereOzellik.menuButonlarıBosluk *3)))              #mümkün olduğunca sistemli ve ortalı olması için belirli formülle dikey düzlemlerine göre çizdirdim.
 menuButonListesi = [play, restart, options, communication]      #menu için buton  oluşturursan listeye dahil et aşağıda döngüyle işlem yapılıyor.
 
 
 
 class Options:
     def __init__(self):
-        self.arabaOlcu = (136,200)
-        self.okAOlcu = (72,72)
-        self.okVSOlcu = (50,50)
+        self.arabaOlcu = (pencereOzellik.O24 , pencereOzellik.O17)
+        self.okAOlcu = (pencereOzellik.O25 , pencereOzellik.O25)
+        self.okVSOlcu = (pencereOzellik.O6 , pencereOzellik.O6)
         self.secimIndex = 1    
         self.secilenAraba = None
-        self.volume = 15
+        self.volume = 5
         self.kutularArkaPlan = (240, 246, 213)
         self.yatayOrta = pencereOzellik.oyunYuzeyi.get_width() /2
         self.dikeyOrta = pencereOzellik.oyunYuzeyi.get_height() /2
-        self.Font = pygame.font.Font(os.path.join('font','12.ttf'),40)
+        self.Font = pygame.font.Font(os.path.join('font','12.ttf'),round(pencereOzellik.O3))
         self.SagOkA = pygame.transform.scale(pygame.image.load(os.path.join('icon','nextbutton.png')).convert_alpha(),self.okAOlcu)
         self.SolOkA = pygame.transform.scale(pygame.image.load(os.path.join('icon','backbutton.png')).convert_alpha(),self.okAOlcu)
         self.SesSimge = pygame.transform.scale(pygame.image.load(os.path.join('icon','volume.png')).convert_alpha(),self.okVSOlcu)
@@ -421,13 +508,13 @@ class Options:
         self.arabaSecim6 = pygame.transform.scale(self.arabaResim6.convert_alpha(),self.arabaOlcu)
         self.arabaSecim7 = pygame.transform.scale(self.arabaResim7.convert_alpha(),self.arabaOlcu)'''
 
-        self.arabaKutuOlcu = ((self.yatayOrta) -120 , (self.dikeyOrta) -230 , 240 , 300)       
-        self.SagOkAOlcu = (self.yatayOrta +150 , (self.dikeyOrta- self.okAOlcu[1]/2) -80) 
-        self.SolOkAOlcu = (self.yatayOrta - (150 +(self.okAOlcu[0])), (self.dikeyOrta - self.okAOlcu[1]/2 ) -80)
-        self.sesSimgeolcu = ((self.yatayOrta) - self.okVSOlcu[0]/2 , (self.dikeyOrta) +135)
-        self.sesKutuOlcu = (self.yatayOrta -50, self.dikeyOrta +200, 100, 60)
-        self.solOkVOlcu = (self.yatayOrta -(80 +self.okVSOlcu[0]), (self.dikeyOrta - self.okVSOlcu[1]/2 )+230)
-        self.sagOkVOlcu = (self.yatayOrta + 80, (self.dikeyOrta - self.okVSOlcu[1]/2 )+230)
+        self.arabaKutuOlcu = (self.yatayOrta - pencereOzellik.O26 , self.dikeyOrta - pencereOzellik.O27 , pencereOzellik.O28 , pencereOzellik.O13)    
+        self.SagOkAOlcu = (self.yatayOrta + pencereOzellik.O29 , (self.dikeyOrta- self.okAOlcu[1]/2) - pencereOzellik.O30) 
+        self.SolOkAOlcu = (self.yatayOrta - (pencereOzellik.O29 +(self.okAOlcu[0])), (self.dikeyOrta - self.okAOlcu[1]/2 ) - pencereOzellik.O30)
+        self.sesSimgeolcu = ((self.yatayOrta) - self.okVSOlcu[0]/2 , (self.dikeyOrta) + pencereOzellik.O23)
+        self.sesKutuOlcu = (self.yatayOrta - pencereOzellik.O6 , self.dikeyOrta + pencereOzellik.O17 , pencereOzellik.O10 , pencereOzellik.O31)
+        self.solOkVOlcu = (self.yatayOrta - ( pencereOzellik.O30 + self.okVSOlcu[0]), (self.dikeyOrta - self.okVSOlcu[1]/2 ) + pencereOzellik.O27)
+        self.sagOkVOlcu = (self.yatayOrta +  pencereOzellik.O30 , (self.dikeyOrta - self.okVSOlcu[1]/2 ) + pencereOzellik.O27)
         
         self.sagOkARect = pygame.Rect(self.SagOkAOlcu[0],self.SagOkAOlcu[1],self.okAOlcu[0],self.okAOlcu[1])        #tıklamalarla işlem görmesi için optionsdaki butonların rect nesnelerinin konumlarını oluşturdum güncel ölçülü halleriyle.
         self.solOkARect = pygame.Rect(self.SolOkAOlcu[0],self.SolOkAOlcu[1],self.okAOlcu[0],self.okAOlcu[1])
@@ -436,7 +523,7 @@ class Options:
         
         
     def arabaGoster(self):
-        pencereOzellik.oyunYuzeyi.blit((self.optionsArabaListe[self.secimIndex -1]), (pencereOzellik.oyunYuzeyi.get_width()/2 - self.optionsArabaListe[self.secimIndex -1].get_width()/2  ,pencereOzellik.oyunYuzeyi.get_height()/2 - self.optionsArabaListe[self.secimIndex -1].get_height()/2 -80))
+        pencereOzellik.oyunYuzeyi.blit((self.optionsArabaListe[self.secimIndex -1]), (pencereOzellik.oyunYuzeyi.get_width()/2 - self.optionsArabaListe[self.secimIndex -1].get_width()/2  ,pencereOzellik.oyunYuzeyi.get_height()/2 - self.optionsArabaListe[self.secimIndex -1].get_height()/2 - pencereOzellik.O30))
         #yukardaki şekilde yazarak aşağıdaki blokları ifade ettik hem karışıklığı hem gereksiz işlemleri azalttık. bu fonksiyondaki yorum satırlarıyla yukardaki tek satır aynı işlevi görüyor. initteki optionArabaListesindede bu yöntemi kullandım.
         '''if self.secimIndex == 1:
             self.secilenAraba = pencereOzellik.oyunYuzeyi.blit(self.arabaSecim1,(pencereOzellik.oyunYuzeyi.get_width()/2 - self.arabaSecim1.get_width()/2  ,pencereOzellik.oyunYuzeyi.get_height()/2 - self.arabaSecim1.get_height()/2 -100))
@@ -458,11 +545,11 @@ class Options:
     
     def optionsCizimler(self):
         pencereOzellik.oyunYuzeyi.blit(pencereOzellik.optionsArkaPlan,(0,0))
-        arabaKutu = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.kutularArkaPlan, self.arabaKutuOlcu , border_radius=30)
+        arabaKutu = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.kutularArkaPlan, self.arabaKutuOlcu , border_radius = pencereOzellik.O39)
         pencereOzellik.oyunYuzeyi.blit(self.SagOkA, self.SagOkAOlcu)
         pencereOzellik.oyunYuzeyi.blit(self.SolOkA, self.SolOkAOlcu)
         pencereOzellik.oyunYuzeyi.blit(self.SesSimge, self.sesSimgeolcu)
-        sesKutu = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.kutularArkaPlan, self.sesKutuOlcu , border_radius=10)
+        sesKutu = pygame.draw.rect(pencereOzellik.oyunYuzeyi, self.kutularArkaPlan, self.sesKutuOlcu , border_radius = pencereOzellik.O22)
         sesSeviyesi = self.Font.render(f'{self.volume}',True,(0,0,0))
         sesSeviyesOlcu = sesSeviyesi.get_rect()
         pencereOzellik.oyunYuzeyi.blit(sesSeviyesi,(sesKutu.centerx - sesSeviyesOlcu.w/2, sesKutu.centery - sesSeviyesOlcu.h/2))
@@ -506,11 +593,11 @@ optionsObj = Options()
 class Araba(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.genislik = 45
-        self.yukseklik = 67
+        self.genislik = pencereOzellik.O32
+        self.yukseklik = pencereOzellik.O33
 
         self.x = pencereOzellik.oyunYuzeyi.get_width()/2 - self.genislik/2
-        self.y = pencereOzellik.oyunYuzeyi.get_height() - 215
+        self.y = pencereOzellik.oyunYuzeyi.get_height() - pencereOzellik.O7
         self.arabaListe = [optionsObj.arabaResim[i] for i in range(0,14)]
         '''self.arabaListe = [getattr(optionsObj,f'arabaResim{i}') for i in range(1,15)]        #self.arabaListe = [f'optionsObj.arabaResim{i}' for i in range(1,8)] bu şekilde yazınca düz olarak algılayıp hata veriyor listeyi yazdırınca düz yazı olarak kaydettiğini gördüm.
                                                                                             #o yüzden ya listenin tüm elemanlarının adlarını tek tek yazıcam yada döngüyle çalışabilmesi için getattr kullanıcam. getattr sınıfın niteliklerine güncel olarak erişmek istediğinde kullanışlı.
@@ -544,7 +631,7 @@ class Araba(pygame.sprite.Sprite):
             else:
                 pass 
         if pencereOzellik.altTusBasili is True:
-            if self.y + self.yukseklik +25 < pencereOzellik.oyunYuzeyi.get_height() - (oyunIciSeviyeAyarlari.bilgiKutuOlcu[3]):
+            if self.y + self.yukseklik + pencereOzellik.O34 < pencereOzellik.oyunYuzeyi.get_height() - (oyunIciSeviyeAyarlari.bilgiKutuOlcu[3]):
                 self.y += pencereOzellik.oyunHizi/3*2
             else:
                 pass
@@ -561,12 +648,12 @@ arabaObj = Araba()
 
 
 class Engeller(pygame.sprite.Sprite):
-    bariyerResimListesi = [pygame.image.load(os.path.join('engeller',f'{i}.png')).convert_alpha() for i in range(1,9)] 
-    arabaResimListesi = [pygame.transform.scale(pygame.image.load(os.path.join('engeller',f'{i}.png')).convert_alpha(),(53,77)) for i in range(9,16)]
+    bariyerResimListesi = [pygame.transform.scale(pygame.image.load(os.path.join('engeller',f'{i}.png')).convert_alpha(),(pencereOzellik.O35 , pencereOzellik.O35)) for i in range(1,9)] 
+    arabaResimListesi = [pygame.transform.scale(pygame.image.load(os.path.join('engeller',f'{i}.png')).convert_alpha(),(pencereOzellik.O36 , pencereOzellik.O37)) for i in range(9,16)]
     sagUcakResimListesi = [pygame.image.load(os.path.join('engeller',f'{i}.png')).convert_alpha() for i in range(16,23)] 
-    #sagUcakResimListesi = [pygame.transform.scale(resim,(resim.get_width()/5*4, resim.get_height()/5*3)) for resim in sagUcakResimListesi]
+    sagUcakResimListesi = [pygame.transform.scale(resim,(round(resim.get_width()*pencereOzellik.O56), round(resim.get_height()*pencereOzellik.O56))) for resim in sagUcakResimListesi]  #bu ve iki alttaki uçak resimlerini yükleyip onların normal boyutlarını alıp ekran ölçüsüne oranla tekrar boyutluyor. her uçağın boyutu farklı olduğu için böyle yaptım.
     solUcakResimListesi = [pygame.image.load(os.path.join('engeller',f'{i}.png')).convert_alpha() for i in range(23,30)] 
-    #solUcakResimListesi = [pygame.transform.scale(resim,(resim.get_width()/5*4, resim.get_height()/5*3)) for resim in solUcakResimListesi]
+    solUcakResimListesi = [pygame.transform.scale(resim,(round(resim.get_width()*pencereOzellik.O56), round(resim.get_height()*pencereOzellik.O56))) for resim in solUcakResimListesi]
     #resimleri initte değilde initten önce tanımlamamın sebebi oluşturulan her obje için tekrar tekrar resim yüklenmesini engellemek, sadece bir defa resim yüklemek için. burdan 100 örnek oluşturulsada resimler sadece bir defa yüklenip, her örnek için rasgele seçilmesini sağlıycak bi yapı oluşturabilirim.
     def __init__(self, tur, x, y) :
         super().__init__()
@@ -574,7 +661,7 @@ class Engeller(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         self.secilenResim = None
-        self.arabaHareketlenmesi = random.randint(100, pencereOzellik.oyunYuzeyi.get_height() -450)
+        self.arabaHareketlenmesi = random.randint(pencereOzellik.O10, pencereOzellik.oyunYuzeyi.get_height() - pencereOzellik.O38)
         self.tekrar = 0
         self.ucakRasgeleYsecimi = random.randint(1, pencereOzellik.oyunHizi)
         self.ucakRasgeleXsecimi = random.randint(1, pencereOzellik.oyunHizi)
@@ -599,7 +686,7 @@ class Engeller(pygame.sprite.Sprite):
         elif self.tur == 'araba':
             self.y += pencereOzellik.oyunHizi /2
             
-            if self.y > self.arabaHareketlenmesi and self.tekrar < 45:
+            if self.y > self.arabaHareketlenmesi and self.tekrar < 65:
                 if self.x < arabaObj.x :
                     self.x += pencereOzellik.oyunHizi /3    
                 if self.x > arabaObj.x :
@@ -622,7 +709,7 @@ class Engeller(pygame.sprite.Sprite):
 
 class SeviyeAyarlar:
     def __init__(self):
-        self.zamanDegeri = 2000
+        self.zamanDegeri = 1700
         self.puanZamanlayicisi = pygame.USEREVENT +1
         pygame.time.set_timer(self.puanZamanlayicisi, self.zamanDegeri)
         self.agacZamanlayicisiSag = pygame.USEREVENT +2    #pygame.settimer  için zamanı aşağıdaki fonksiyonda tanımlayıp her süre dolumunda o fonksiyona gönderdim ki süreki farklı zamanları seçsin
@@ -631,16 +718,16 @@ class SeviyeAyarlar:
         self.agacIcinZamanSec('sol') 
         self.engelZamanlayicisi = pygame.USEREVENT +4
         self.engellerIcinZamanSec()
-        self.bilgiKutuOlcu = [0 ,pencereOzellik.oyunYuzeyi.get_height() -80 , pencereOzellik.oyunYuzeyi.get_width(), 80]
-        self.bilgiFont = pygame.font.Font(os.path.join('font','2.ttf'), 30)
+        self.bilgiKutuOlcu = [0 ,pencereOzellik.oyunYuzeyi.get_height() - pencereOzellik.O30 , pencereOzellik.oyunYuzeyi.get_width(), pencereOzellik.O30]
+        self.bilgiFont = pygame.font.Font(os.path.join('font','2.ttf'), pencereOzellik.O39)
         self.fontRenk = (240, 246, 213)
         self.fontOlcu = self.bilgiFont.render(f'Olcu : {pencereOzellik.seviye}', True, self.fontRenk)       #bunu burda yapmamızın sebebi yazının yüksekliğiyle ilgili hesaplamayı initte yapıp fonksiyon her çalıştığında tekrar tekrar hesaplama yapmaması için. metni initte hazırlayabiliyoruz,
                                                                                                             #ama puan ve seviye değişkenlerinin sürekli güncellenmesi gerekiyor. initte bunlar güncellenmiyor sınıf oluşturulurken ki değerleri alıyor sabit kalıyor. oyüzden yazı oluşturma kısmını fonksiyona, 
                                                                                                             #bunların ölçüleri sabit olcağı için ölçüsünüde bi yer tutucuya katardım ki metnin yükseklik olarak ölçüsünü alabileyim
-        self.levelBilgiKonum = (150, self.bilgiKutuOlcu[1] + (self.bilgiKutuOlcu[3]/2 - self.fontOlcu.get_height()/2))      #dikey olarak kutuya ortalayabilmek için için font ölçüdeki rasgele oluşturduğum meyni kullanıyorum . dikay olarak boyutları sabit olcak.
-        self.scoreBilgiKonum = (pencereOzellik.oyunYuzeyi.get_width()/2 +25, self.bilgiKutuOlcu[1] + (self.bilgiKutuOlcu[3]/2 - self.fontOlcu.get_height()/2))
-        self.disKenarOlcu =[0,0,pencereOzellik.oyunYuzeyi.get_width() ,pencereOzellik.oyunYuzeyi.get_height()]
-        self.IcKenarOlcu = [125,0,550,1100]
+        self.levelBilgiKonum = (pencereOzellik.O29 , self.bilgiKutuOlcu[1] + (self.bilgiKutuOlcu[3]/2 - self.fontOlcu.get_height()/2))      #dikey olarak kutuya ortalayabilmek için için font ölçüdeki rasgele oluşturduğum meyni kullanıyorum . dikay olarak boyutları sabit olcak.
+        self.scoreBilgiKonum = (pencereOzellik.oyunYuzeyi.get_width()/2 + pencereOzellik.O34, self.bilgiKutuOlcu[1] + (self.bilgiKutuOlcu[3]/2 - self.fontOlcu.get_height() /2))
+        self.disKenarOlcu =[0, 0, pencereOzellik.oyunYuzeyi.get_width(), pencereOzellik.oyunYuzeyi.get_height()]
+        self.IcKenarOlcu = [pencereOzellik.O40 , 0 , round(pencereOzellik.ekranYatayBoyut - (pencereOzellik.O40 *2)) ,pencereOzellik.ekranDikeyBoyut]
         self.sagAgacListesi = []
         self.solAgacListesi = []
         self.engelListesi = []
@@ -648,33 +735,35 @@ class SeviyeAyarlar:
 
 
     def seviyeSecim(self):
-        if 0 <= pencereOzellik.puan < 80:
+        if 0 <= pencereOzellik.puan < pencereOzellik.O30:
             pencereOzellik.seviye = 1
-        elif 80 <= pencereOzellik.puan < 170:
+        elif pencereOzellik.O30 <= pencereOzellik.puan < pencereOzellik.O41:
             pencereOzellik.seviye = 2
-            pencereOzellik.oyunHizi = 9
-        elif 170 <= pencereOzellik.puan < 270:
+            pencereOzellik.oyunHizi = pencereOzellik.O47
+        elif pencereOzellik.O41 <= pencereOzellik.puan < pencereOzellik.O42:
             pencereOzellik.seviye = 3
-            pencereOzellik.oyunHizi = 10
-        elif 270 <= pencereOzellik.puan < 380:
+            pencereOzellik.oyunHizi = pencereOzellik.O22
+        elif pencereOzellik.O42 <= pencereOzellik.puan < pencereOzellik.O43:
             pencereOzellik.seviye = 4
-            pencereOzellik.oyunHizi = 11
-        elif 380 <= pencereOzellik.puan < 620:
+            pencereOzellik.oyunHizi = pencereOzellik.O48
+        elif pencereOzellik.O43 <= pencereOzellik.puan < pencereOzellik.O44:
             pencereOzellik.seviye = 5
-            pencereOzellik.oyunHizi = 12
-        elif 620 <= pencereOzellik.puan < 945:
+            pencereOzellik.oyunHizi = pencereOzellik.O49
+        elif pencereOzellik.O44 <= pencereOzellik.puan < pencereOzellik.O45:
             pencereOzellik.seviye = 6
-            pencereOzellik.oyunHizi = 13
-        elif 945 <= pencereOzellik.puan < 1395:
+            pencereOzellik.oyunHizi = pencereOzellik.O50
+        elif pencereOzellik.O45 <= pencereOzellik.puan < pencereOzellik.O46:
             pencereOzellik.seviye = 7
-            pencereOzellik.oyunHizi = 15
-        elif 1395 <= pencereOzellik.puan :
+            pencereOzellik.oyunHizi = pencereOzellik.O55               
+        elif pencereOzellik.O46 <= pencereOzellik.puan <= pencereOzellik.O52:
             pencereOzellik.seviye = 8
-            pencereOzellik.oyunHizi = 18
+            pencereOzellik.oyunHizi = pencereOzellik.O51
+        elif pencereOzellik.O52 <= pencereOzellik.puan:     #1100 piksele göre 2000 puanı geçince hız 25 olcak.
+            pencereOzellik.oyunHizi = pencereOzellik.O34
 
 
         pygame.draw.rect(pencereOzellik.oyunYuzeyi, pencereOzellik.disKenarRenk , self.disKenarOlcu)    
-        pygame.draw.rect(pencereOzellik.oyunYuzeyi, (pencereOzellik.icKenarRenk) , self.IcKenarOlcu)
+        pygame.draw.rect(pencereOzellik.oyunYuzeyi, pencereOzellik.icKenarRenk , self.IcKenarOlcu)
         seritAyarlamalari()
         self.agacAyarla()
         self.engelAyarla()
@@ -698,9 +787,9 @@ class SeviyeAyarlar:
 
     def agacIcinZamanSec(self,bolge):
         if bolge == 'sag':
-            pygame.time.set_timer(self.agacZamanlayicisiSag, (random.randint(700, 3000)))
+            pygame.time.set_timer(self.agacZamanlayicisiSag, (random.randint(700, 2000)))
         elif bolge == 'sol':
-            pygame.time.set_timer(self.agacZamanlayicisiSol, (random.randint(700, 3000)))
+            pygame.time.set_timer(self.agacZamanlayicisiSol, (random.randint(700, 2000)))
         
     def agacOlustur(self,bolge):
         if bolge == 'sag':
@@ -718,30 +807,41 @@ class SeviyeAyarlar:
 
 
     def engellerIcinZamanSec(self):
-        if 1 <= pencereOzellik.seviye <= 3:
-            pygame.time.set_timer(self.engelZamanlayicisi, (random.randint(2000,3500)))
-        elif 4 <= pencereOzellik.seviye <= 6:
-            pygame.time.set_timer(self.engelZamanlayicisi, (random.randint(1700,3000)))
-        elif 7 <= pencereOzellik.seviye < 8:
-            pygame.time.set_timer(self.engelZamanlayicisi, (random.randint(1400,2200)))
-        elif 8 <= pencereOzellik.seviye:
-            pygame.time.set_timer(self.engelZamanlayicisi, (random.randint(1000,1700)))
+        if 1 == pencereOzellik.seviye :
+            pygame.time.set_timer(self.engelZamanlayicisi, (random.randint(1500,2000)))
+        elif 2 == pencereOzellik.seviye :
+            pygame.time.set_timer(self.engelZamanlayicisi, (random.randint(750,1500)))
+        elif 3 == pencereOzellik.seviye :
+            pygame.time.set_timer(self.engelZamanlayicisi, (random.randint(1500,2200)))
+        elif 4 == pencereOzellik.seviye :
+            pygame.time.set_timer(self.engelZamanlayicisi, (random.randint(1000,1500)))
+        elif 5 == pencereOzellik.seviye :
+            pygame.time.set_timer(self.engelZamanlayicisi, (random.randint(1000,1500)))
+        elif 6 == pencereOzellik.seviye :
+            pygame.time.set_timer(self.engelZamanlayicisi, (random.randint(900,1300)))
+        elif 7 == pencereOzellik.seviye :
+            pygame.time.set_timer(self.engelZamanlayicisi, (random.randint(1150,1450)))
+        elif 8 == pencereOzellik.seviye :
+            pygame.time.set_timer(self.engelZamanlayicisi, (random.randint(1000,1500)))
+
+
+
 
     def engelOlustur(self):# seviyeleri duzenle
         if 1 <= pencereOzellik.seviye <= 2:
-            self.engelListesi.append(Engeller('bariyer', random.randint(self.IcKenarOlcu[0],self.IcKenarOlcu[0] + self.IcKenarOlcu[2]-96), -100))
+            self.engelListesi.append(Engeller('bariyer', random.randint(self.IcKenarOlcu[0],self.IcKenarOlcu[0] + self.IcKenarOlcu[2] - pencereOzellik.O35), - pencereOzellik.O10))
         elif 3 <= pencereOzellik.seviye <= 4:
-            self.engelListesi.append(random.choice([Engeller('bariyer', random.randint(self.IcKenarOlcu[0],self.IcKenarOlcu[0] + self.IcKenarOlcu[2]-96), -100),
-                                                    Engeller('araba', random.randint(self.IcKenarOlcu[0],self.IcKenarOlcu[0] + self.IcKenarOlcu[2]-96), -100)]))
+            self.engelListesi.append(random.choice([Engeller('bariyer', random.randint(self.IcKenarOlcu[0],self.IcKenarOlcu[0] + self.IcKenarOlcu[2] - pencereOzellik.O35), - pencereOzellik.O10),
+                                                    Engeller('araba', random.randint(self.IcKenarOlcu[0],self.IcKenarOlcu[0] + self.IcKenarOlcu[2] - pencereOzellik.O36), - pencereOzellik.O10)]))
         elif 5 <= pencereOzellik.seviye <= 6:
-            self.engelListesi.append(Engeller('araba', random.randint(self.IcKenarOlcu[0],self.IcKenarOlcu[0] + self.IcKenarOlcu[2]-96), -100))
+            self.engelListesi.append(Engeller('araba', random.randint(self.IcKenarOlcu[0],self.IcKenarOlcu[0] + self.IcKenarOlcu[2] - pencereOzellik.O36), - pencereOzellik.O10))
         elif 7 == pencereOzellik.seviye:
-            self.engelListesi.append(random.choice([Engeller('ucaksol', pencereOzellik.oyunYuzeyi.get_width() +100, random.randint(-400, 0)),
-                                                    Engeller('ucaksag', -100, random.randint(-400, 0))]))
+            self.engelListesi.append(random.choice([Engeller('ucaksol', pencereOzellik.oyunYuzeyi.get_width() +pencereOzellik.O10, random.randint( -pencereOzellik.O53, pencereOzellik.O17)),
+                                                    Engeller('ucaksag', -pencereOzellik.O10, random.randint( -pencereOzellik.O53, pencereOzellik.O17))]))
         elif 8 <= pencereOzellik.seviye:
-            self.engelListesi.append(random.choice([Engeller('araba', random.randint(self.IcKenarOlcu[0],self.IcKenarOlcu[0] + self.IcKenarOlcu[2]-96), -100),
-                                                    Engeller('ucaksol', pencereOzellik.oyunYuzeyi.get_width() +100, random.randint(-400, 0)),
-                                                    Engeller('ucaksag', -100, random.randint(-400, 0))]))
+            self.engelListesi.append(random.choice([Engeller('araba', random.randint(self.IcKenarOlcu[0],self.IcKenarOlcu[0] + self.IcKenarOlcu[2] - pencereOzellik.O36 ), -pencereOzellik.O10),
+                                                    Engeller('ucaksol', pencereOzellik.oyunYuzeyi.get_width() +pencereOzellik.O10, random.randint( -pencereOzellik.O53, pencereOzellik.O17)),
+                                                    Engeller('ucaksag', -pencereOzellik.O10, random.randint( -pencereOzellik.O53, pencereOzellik.O17))]))
 
     def engelAyarla(self):
         for i in self.engelListesi:
@@ -802,18 +902,18 @@ def communicationGec():
     pencereOzellik.oyunYuzeyi.blit(pencereOzellik.communicationArkaPlan,(0,0))
     mail = pencereOzellik.communicationYaziAyar.render('abdullah.tosun.9696@gmail.com',True,(0,0,0))
     github = pencereOzellik.communicationYaziAyar.render('https://github.com/Abdullahtsn',True,(20,20,20))
-    pencereOzellik.oyunYuzeyi.blit(mail,((pencereOzellik.oyunYuzeyi.get_width()/2 - mail.get_width()/2), (pencereOzellik.oyunYuzeyi.get_height()/2 - mail.get_height()/2)-70 ))
-    pencereOzellik.oyunYuzeyi.blit(github,((pencereOzellik.oyunYuzeyi.get_width()/2 - github.get_width()/2), (pencereOzellik.oyunYuzeyi.get_height()/2 - github.get_height()/2) +30))
+    pencereOzellik.oyunYuzeyi.blit(mail,((pencereOzellik.oyunYuzeyi.get_width()/2 - mail.get_width()/2), (pencereOzellik.oyunYuzeyi.get_height()/2 - mail.get_height()/2) - pencereOzellik.O12 ))
+    pencereOzellik.oyunYuzeyi.blit(github,((pencereOzellik.oyunYuzeyi.get_width()/2 - github.get_width()/2), (pencereOzellik.oyunYuzeyi.get_height()/2 - github.get_height()/2) + pencereOzellik.O39))
 
 def duraklat():
     pencereOzellik.oyunYuzeyi.blit(GorevCubugu.pauseFontCiz,((pencereOzellik.oyunYuzeyi.get_width()/2) - (GorevCubugu.pauseFontCerceveOlcu.w/2), (pencereOzellik.oyunYuzeyi.get_height()/2) -GorevCubugu.pauseFontCerceveOlcu.h/2))      #oyun durunca pauseyi çizdirdiğimiz kod. .
 
 def oyunSonuEkrani(sonpuan):
-    pencereOzellik.oyunYuzeyi.blit(pencereOzellik.oyunSonuArkaPlan,(-50,0))
+    pencereOzellik.oyunYuzeyi.blit(pencereOzellik.oyunSonuArkaPlan,( - pencereOzellik.O6 ,0))
     gameOver = pencereOzellik.oyunSonuYaziAyar.render('GAME OVER',True,(235,235,235))
     puan = pencereOzellik.oyunSonuYaziAyar.render((f'SCORE  {sonpuan}'),True,(20,20,20))
-    pencereOzellik.oyunYuzeyi.blit(gameOver,((pencereOzellik.oyunYuzeyi.get_width()/2 - gameOver.get_width()/2), (pencereOzellik.oyunYuzeyi.get_height()/2 - gameOver.get_height()/2) -350))
-    pencereOzellik.oyunYuzeyi.blit(puan,((pencereOzellik.oyunYuzeyi.get_width()/2 - puan.get_width()/2), (pencereOzellik.oyunYuzeyi.get_height()/2 - puan.get_height()/2) +50 ))
+    pencereOzellik.oyunYuzeyi.blit(gameOver,((pencereOzellik.oyunYuzeyi.get_width()/2 - gameOver.get_width()/2), (pencereOzellik.oyunYuzeyi.get_height()/2 - gameOver.get_height()/2) - pencereOzellik.O54))
+    pencereOzellik.oyunYuzeyi.blit(puan,((pencereOzellik.oyunYuzeyi.get_width()/2 - puan.get_width()/2), (pencereOzellik.oyunYuzeyi.get_height()/2 - puan.get_height()/2) + pencereOzellik.O6 ))
     
 def sesDonguleri():
     muzikCaliyor = pygame.mixer.music.get_busy()
@@ -909,7 +1009,7 @@ def oyunCalistir():
                     buton.butonEfektAktif = False
                 buton.menuButonEfekt(pencereOzellik.oyunYuzeyi)
         
-        if  pencereOzellik.oyunAktif is True and pencereOzellik.menu is False and  pencereOzellik.duraklat is False:         #oyun şemaları çizimi
+        elif  pencereOzellik.oyunAktif is True :         #oyun şemaları çizimi
             oyunIciSeviyeAyarlari.seviyeSecim()      #yapılıcak tekrarlı çizimkileri bu fonksiyon içine yaz.
             oyunIciSeviyeAyarlari.oyunBilgisi()
             oyunIciSeviyeAyarlari.engelSpriteGrubuGuncelle()
@@ -928,16 +1028,16 @@ def oyunCalistir():
                         pencereOzellik.herseyiSifirla()
             
             
-        elif pencereOzellik.communication is True and pencereOzellik.menu is False and pencereOzellik.oyunAktif is False and pencereOzellik.oyunSonu is False:
+        elif pencereOzellik.communication is True :
             communicationGec()
         
-        elif pencereOzellik.options is True and pencereOzellik.menu is False and pencereOzellik.oyunAktif is False :
+        elif pencereOzellik.options is True :
             optionsObj.optionsCizimler()
         
         elif pencereOzellik.duraklat is True and pencereOzellik.menu is False and pencereOzellik.oyunAktif is False and pencereOzellik.oyunSonu is False:
             duraklat()
             
-        elif  pencereOzellik.oyunSonu is True and pencereOzellik.menu is False and pencereOzellik.oyunAktif is False :
+        elif  pencereOzellik.oyunSonu is True :
             oyunSonuEkrani(sonpuan)
 
         if pencereOzellik.oyunAktif is False and pencereOzellik.menu is True or pencereOzellik.duraklat is True:
@@ -950,7 +1050,8 @@ def oyunCalistir():
         sesDonguleri()
         
         pygame.display.flip()       #güncelleme için.
-        pencereOzellik.fps.tick(50)
+        pencereOzellik.fps.tick(60)
+        
         
 
 if __name__ == '__main__':      #bu bloğun anlamı: sadece bu py dosyası doğrudan çalıştırılıyorsa  işlemler gerçekleştiricek demek,
