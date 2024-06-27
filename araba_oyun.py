@@ -76,7 +76,6 @@ class Pencere:
     def ekranOlcuTespit(self):
         a = pygame.display.get_desktop_sizes()
         olcuYatayTespit, olcuDikeyTespit = a[0]     #kullanıcı ekran ölçüleri alma.
-        print(olcuDikeyTespit)
         if olcuDikeyTespit <= 800:
             self.ekranDikeyBoyut = 690
         elif 800 < olcuDikeyTespit <= 1100:
@@ -965,13 +964,13 @@ def oyunCalistir():
 
             if event.type == pygame.KEYDOWN:
                 if pencereOzellik.oyunAktif:
-                    if event.key == pygame.K_LEFT:
+                    if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                         pencereOzellik.solTusBasili = True
-                    elif event.key == pygame.K_RIGHT:
+                    elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         pencereOzellik.sagTusBasili = True
-                    elif event.key == pygame.K_UP:
+                    elif event.key == pygame.K_UP or event.key == pygame.K_w:
                         pencereOzellik.ustTusBasili = True
-                    elif event.key == pygame.K_DOWN:
+                    elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                         pencereOzellik.altTusBasili = True
                 if event.key == pygame.K_SPACE:
                     if pencereOzellik.oyunAktif is True:
@@ -996,16 +995,15 @@ def oyunCalistir():
                     pencereOzellik.oyunSonu = False
                     pencereOzellik.duraklat = True
                     
-
             if event.type == pygame.KEYUP:
                 if pencereOzellik.oyunAktif:
-                    if event.key == pygame.K_LEFT:
+                    if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                         pencereOzellik.solTusBasili = False
-                    elif event.key == pygame.K_RIGHT:
+                    elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         pencereOzellik.sagTusBasili = False
-                    elif event.key == pygame.K_UP:
+                    elif event.key == pygame.K_UP or event.key == pygame.K_w:
                         pencereOzellik.ustTusBasili = False
-                    elif event.key == pygame.K_DOWN:
+                    elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                         pencereOzellik.altTusBasili = False
         
             ############   OLUŞTURULAN ÖZEL EVENTLER   #################
